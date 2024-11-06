@@ -1,4 +1,8 @@
 soong_namespace {
+    imports: [
+        "hardware/oplus",
+        "vendor/oneplus/astonc",
+    ],
 }
 
 // The OPlus SR consumers load the models by their stock .bin names, but the
