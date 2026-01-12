@@ -1,0 +1,10 @@
+# USB fast charge
+/sys/module/oplus_chg/parameters/force_fast_charge      u:object_r:vendor_sysfs_fastcharge:s0
+/sys/module/oplus_chg/parameters/ffc_val                u:object_r:vendor_sysfs_fastcharge:s0
+
+# Charging
+/sys/devices/platform/soc/soc:oplus,chg_intf/oplus_chg/usb/fastchg_status         u:object_r:vendor_sysfs_battery_supply:s0
+/sys/devices/platform/soc/soc:oplus,chg_intf/soc:oplus,chg_intf:oplus,wireless-charge/oplus_chg/wireless/fastchg_status u:object_r:vendor_sysfs_battery_supply:s0
+
+# AOD brightness
+/sys/kernel/oplus_display/aod_light_mode_set      u:object_r:vendor_sysfs_aod_brightness:s0

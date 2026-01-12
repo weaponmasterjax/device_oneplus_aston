@@ -1,0 +1,2 @@
+# OTG
+genfscon sysfs /devices/virtual/oplus_chg/usb/otg_switch u:object_r:vendor_sysfs_otg_switch:s0
