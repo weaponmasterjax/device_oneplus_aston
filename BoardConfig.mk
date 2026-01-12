@@ -25,6 +25,9 @@ TARGET_ODM_PROP += $(DEVICE_PATH)/properties/odm.prop
 TARGET_SYSTEM_EXT_PROP += $(DEVICE_PATH)/properties/system_ext.prop
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/properties/vendor.prop
 
+# SELinux
+BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
+
 # Recovery
 TARGET_RECOVERY_UI_MARGIN_HEIGHT := 103
 

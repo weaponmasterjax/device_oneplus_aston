@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022 The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string-array name="config_locationExtraPackageNames" translatable="false">
+        <!-- Bluetooth -->
+        <item>com.android.bluetooth</item>
+        <!-- TeleService -->
+        <item>com.android.phone</item>
+        <!-- CneApp -->
+        <item>com.qualcomm.qti.cne</item>
+        <!-- ImsService -->
+        <item>com.shannon.imsservice</item>
+        <item>com.mediatek.ims</item>
+    </string-array>
+</resources>
