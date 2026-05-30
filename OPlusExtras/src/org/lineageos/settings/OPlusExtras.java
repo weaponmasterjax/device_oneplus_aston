@@ -113,6 +113,7 @@ public class OPlusExtras extends PreferenceFragment
     public static final String KEY_GAME_SWITCH = "game_mode";
     public static final String KEY_GAME_SWITCH_WARNING = "game_mode_warning";
     public static final String KEY_TP_EDGE_LIMIT_SWITCH = "tp_edge_limit";
+    public static final String KEY_TOUCH_GESTURE_SETTINGS = "touch_gesture_settings";
     private static TwoStatePreference mGameModeSwitch;
     private static TwoStatePreference mTPEdgeLimitModeSwitch;
 
@@ -415,6 +416,15 @@ public class OPlusExtras extends PreferenceFragment
         }
         else {
            findPreference(KEY_TP_EDGE_LIMIT_SWITCH).setVisible(false);
+        }
+
+        // Touch Gesture Settings
+        touchscreenCategory = touchscreenCategory | isFeatureSupported(context, R.bool.config_deviceSupportsTouchGestureSettings);
+        if (!isFeatureSupported(context, R.bool.config_deviceSupportsTouchGestureSettings)) {
+            Preference gesturePref = findPreference(KEY_TOUCH_GESTURE_SETTINGS);
+            if (gesturePref != null) {
+                gesturePref.setVisible(false);
+            }
         }
 
         if (!touchscreenCategory) {

@@ -50,6 +50,9 @@
     <!-- Whether device supports TP Edge Limit -->
     <bool name="config_deviceSupportsTPEdgeLimit">false</bool>
 
+    <!-- Whether device supports touch gesture settings -->
+    <bool name="config_deviceSupportsTouchGestureSettings">true</bool>
+
     <!-- Whether to show Jitter Test -->
     <bool name="config_deviceSupportsJitterTest">true</bool>
 
