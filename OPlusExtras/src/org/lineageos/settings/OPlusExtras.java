@@ -147,10 +147,7 @@ public class OPlusExtras extends PreferenceFragment
         Context context = this.getContext();
 
         // Slider Preferences
-        if (isFeatureSupported(context, R.bool.config_deviceSupportsAlertSlider)) {
-            initNotificationSliderPreference();
-        }
-        else {
+        if (!isFeatureSupported(context, R.bool.config_deviceSupportsAlertSlider)) {
             getPreferenceScreen().removePreference((Preference) findPreference(KEY_CATEGORY_SLIDER));
         }
 
