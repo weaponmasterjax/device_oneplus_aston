@@ -23,6 +23,7 @@
     <!-- Alert slider -->
     <string name="notification_slider_category_title">Alert slider</string>
     <string name="notification_slider_title">Alert slider settings</string>
+    <string name="notification_slider_summary">Open alert slider behavior settings</string>
     <string name="notification_slider_selection_dialog_title">Action</string>
     <string name="notification_slider_top_position">Top position</string>
     <string name="notification_slider_middle_position">Middle position</string>
