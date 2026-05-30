@@ -157,6 +157,8 @@
     <string name="game_mode_warning">May decrease battery life</string>
     <string name="tp_edge_limit_mode_title">TP Edge Limit</string>
     <string name="tp_edge_limit_mode_summary">Disable the touchpanels edge limit</string>
+    <string name="touch_gesture_settings_title">Touch gestures</string>
+    <string name="touch_gesture_settings_summary">Open built-in touchscreen gesture configuration</string>
 
     <!-- UiBench -->
     <string name="category_uibench">UiBench</string>

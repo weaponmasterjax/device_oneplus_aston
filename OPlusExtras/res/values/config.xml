@@ -84,4 +84,8 @@
     <string name="config_DolbyPackage" translatable="false">com.dolby.daxappui</string>
     <string name="config_DolbyStartActivity" translatable="false">com.dolby.daxappui.MainActivity</string>
 
+    <!-- Touch Gestures -->
+    <string name="config_TouchGesturePackage" translatable="false">com.android.touch.gestures</string>
+    <string name="config_TouchGestureStartActivity" translatable="false">com.android.touch.gestures.TouchscreenGestureSettings</string>
+
 </resources>

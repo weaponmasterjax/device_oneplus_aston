@@ -215,6 +215,16 @@
             android:key="tp_edge_limit"
             android:title="@string/tp_edge_limit_mode_title"
             android:summary="@string/tp_edge_limit_mode_summary" />
+
+        <Preference
+            android:key="touch_gesture_settings"
+            android:title="@string/touch_gesture_settings_title"
+            android:summary="@string/touch_gesture_settings_summary"
+            android:persistent="false" >
+            <intent
+                android:targetPackage="@string/config_TouchGesturePackage"
+                android:targetClass="@string/config_TouchGestureStartActivity" />
+        </Preference>
     </PreferenceCategory>
 
     <!-- Start of UiBench Category -->
