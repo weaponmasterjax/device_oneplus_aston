@@ -1060,6 +1060,9 @@ odm/lib64/libyuvwrapper.so
 odm/lib64/vendor.oplus.hardware.camera_rfi-V1-service-impl.so
 odm/lib64/vendor.oplus.hardware.cameraextension-V1-service-impl.so
 odm/lib64/vendor.oplus.hardware.sendextcamcmd-V1-service-impl.so
+odm/lib64/vendor.oplus.hardware.camera_rfi-V1-ndk.so|6a947ef646d5dea3e37cfede26565f0820279a75
+odm/lib64/vendor.oplus.hardware.cammidasservice-V1-ndk.so|8c23f795b93f2fcfc740111433e409def10f843b
+odm/lib64/vendor.oplus.hardware.sendextcamcmd-V2-ndk.so|9c8990c26d352ee818a46b9a125dfd0e9623ee62
 system/lib64/libziparchive.so:odm/lib64/libziparchive_odm.so;FIX_SONAME
 vendor/bin/hw/vendor.qti.camera.provider-service_64
 vendor/etc/init/vendor.qti.camera.provider-service_64.rc
@@ -1244,6 +1247,9 @@ vendor/lib64/libubifocus.so
 vendor/lib64/libvideoml.so
 vendor/lib64/vendor.qti.hardware.camera.aon-service-impl.so
 vendor/lib64/vendor.qti.hardware.camera.postproc@1.0-service-impl.so
+vendor/lib64/vendor.oplus.hardware.cameraextension-V1-ndk.so|9d991dd161bce64ae5487a5a4b6298b7928c2291
+vendor/lib64/vendor.oplus.hardware.cammidasservice-V1-ndk.so;MODULE_SUFFIX=_vendor|8c23f795b93f2fcfc740111433e409def10f843b
+vendor/lib64/vendor.oplus.hardware.commondcs-V1-ndk_platform.so|34d9bd68e99e02f08f45cb14c5cda8487bf6a668
 
 # Charger firmware
 odm/firmware/fastchg/23861/charging_hyper_mode_config.txt
