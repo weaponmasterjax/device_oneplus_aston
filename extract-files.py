@@ -51,6 +51,20 @@ blob_fixups: blob_fixups_user_type = {
     'odm/lib64/libAlgoProcess.so': blob_fixup()
         .replace_needed('android.hardware.graphics.common-V3-ndk.so', 'android.hardware.graphics.common-V7-ndk.so')
         .add_needed('libapsfixup.so'),
+    # OOS camera stack expects the small-ABI ColorOS libui (sizeof(GraphicBuffer)==264); AOSP-16's
+    # platform libui is larger, so its GraphicBuffer ctor overran libEIS's 264-byte alloc ->
+    # heap-header corruption -> the hold-to-record SIGSEGV. The small libui is shipped SEPARATELY
+    # as libui_oplus.so by vendor/oplus/camera (renamed so it cannot shadow the platform libui for
+    # the whole vendor partition via the /odm/${LIB} search path -> that caused a boot loop).
+    # Repoint these odm camera consumers at the isolated libui_oplus.so.
+    (
+        'odm/lib64/libEIS.so',
+        'odm/lib64/libHIS.so',
+        'odm/lib64/libsharebuffer_impl.so',
+        'odm/lib64/hw/camera.oemlayer.so',
+        'odm/lib64/camera/components/com.oplus.node.sstabphoto.so',
+    ): blob_fixup()
+        .replace_needed('libui.so', 'libui_oplus.so'),
     (
         'odm/lib64/libCOppLceTonemapAPI.so',
         'odm/lib64/libSuperRaw.so',
