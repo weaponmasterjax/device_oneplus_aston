@@ -98,6 +98,11 @@
             android:summary="@string/aod_brightness_summary" />
 
         <SwitchPreferenceCompat
+            android:key="ltpo_adaptive_refresh"
+            android:title="@string/ltpo_title"
+            android:summary="@string/ltpo_summary" />
+
+        <SwitchPreferenceCompat
             android:key="auto_hbm"
             android:title="@string/auto_hbm_title"
             android:summary="@string/auto_hbm_summary" />

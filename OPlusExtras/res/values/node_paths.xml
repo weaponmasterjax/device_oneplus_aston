@@ -69,6 +69,11 @@
     <string name="node_aod_brightness_switch_true">0</string>
     <string name="node_aod_brightness_switch_false">1</string>
 
+    <!-- LTPO and adaptive refresh rate sysfs node path, true, false -->
+    <string name="node_ltpo_switch">/sys/kernel/oplus_display/test_te</string>
+    <string name="node_ltpo_switch_true">1</string>
+    <string name="node_ltpo_switch_false">0</string>
+
     <!-- USB 2.0 Force fastcharge sysfs node path -->
     <string name="node_usb2_fast_charge_mode_switch">/sys/module/oplus_chg/parameters/force_fast_charge</string>
     <string name="node_usb2_fast_charge_mode_switch_true">1</string>
