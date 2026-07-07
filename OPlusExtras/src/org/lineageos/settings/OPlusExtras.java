@@ -72,7 +72,9 @@ public class OPlusExtras extends PreferenceFragment
     public static TwoStatePreference mOnePulsePWMSwitch;
     public static TwoStatePreference mAutoHBMSwitch;
     public static final String KEY_AOD_BRIGHTNESS_SWITCH = "aod_brightness";
+    public static final String KEY_LTPO_ADAPTIVE_REFRESH_SWITCH = "ltpo_adaptive_refresh";
     private static TwoStatePreference mAODBrightnessSwitch;
+    private static TwoStatePreference mLTPOAdaptiveRefreshSwitch;
     private Preference mHBMInfo;
     private int mHBMInfoClickCount = 0;
     private long mLastHBMInfoClickTime = 0;
@@ -269,6 +271,12 @@ public class OPlusExtras extends PreferenceFragment
         } else {
             findPreference(KEY_AOD_BRIGHTNESS_SWITCH).setVisible(false);
         }
+
+        // LTPO and adaptive refresh rate
+        mLTPOAdaptiveRefreshSwitch = (TwoStatePreference) findPreference(KEY_LTPO_ADAPTIVE_REFRESH_SWITCH);
+        mLTPOAdaptiveRefreshSwitch.setEnabled(LTPOAdaptiveRefreshSwitch.isSupported(this.getContext()));
+        mLTPOAdaptiveRefreshSwitch.setChecked(PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(KEY_LTPO_ADAPTIVE_REFRESH_SWITCH, true));
+        mLTPOAdaptiveRefreshSwitch.setOnPreferenceChangeListener(new LTPOAdaptiveRefreshSwitch());
 
         if (!displayCategory) {
             getPreferenceScreen().removePreference((Preference) findPreference(KEY_CATEGORY_DISPLAY));

@@ -77,6 +77,10 @@ public class Startup extends BroadcastReceiver {
         if (enabled) {
             restore(OTGModeSwitch.getFile(context), enabled);
         }
+        enabled = sharedPrefs.getBoolean(OPlusExtras.KEY_LTPO_ADAPTIVE_REFRESH_SWITCH, true);
+        if (enabled) {
+            restore(LTPOAdaptiveRefreshSwitch.getFile(context), enabled);
+        }
         enabled = sharedPrefs.getBoolean(OPlusExtras.KEY_AOD_BRIGHTNESS_SWITCH, false);
         if (enabled) {
             restore(org.lineageos.settings.modeswitch.AODBrightnessSwitch.getFile(context), enabled);
