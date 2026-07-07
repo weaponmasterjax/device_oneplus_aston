@@ -2,7 +2,9 @@
 bluetooth.device.default_name=OnePlus 12R
 
 # Graphics
-ro.surface_flinger.set_idle_timer_ms=250
+# No SF idle timer: kernel ADFR/LTPO drops the panel self-refresh (20Hz floor,
+# 1Hz idle) underneath the current mode, like stock OOS.
+# Keeping it here will cause potential conflict with the kernel hack.
 ro.surface_flinger.set_touch_timer_ms=300
 
 # USB
