@@ -177,6 +177,8 @@
     <!-- AOD Brightness -->
     <string name="aod_brightness_title">Higher AOD Brightness</string>
     <string name="aod_brightness_summary">Whether to use higher brightness for AOD</string>
+    <string name="ltpo_title">LTPO and adaptive refresh rate</string>
+    <string name="ltpo_summary">Enable LTPO and adaptive refresh rate support. Changes require a reboot to take effect.</string>
 
     <!-- Audio -->
     <string name="category_audio">Audio</string>
