@@ -1043,6 +1043,9 @@ odm/lib64/libremosaiclib_s5kjn1.so;FIX_SONAME
 odm/lib64/librmsclib1.so
 odm/lib64/libsaveshaderbin.so
 odm/lib64/libsdk_sr.so
+odm/lib64/libsdk_sr_ref.so
+odm/lib64/sr_models.bin:odm/lib64/sr_models.so
+odm/lib64/sr_ref_models.bin:odm/lib64/sr_ref_models.so
 odm/lib64/libsharebuffer.so
 odm/lib64/libsharebuffer_impl.so
 odm/lib64/libsnpe_loader.so
