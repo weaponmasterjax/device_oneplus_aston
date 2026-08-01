@@ -18,6 +18,10 @@ from extract_utils.main import (
 )
 
 namespace_imports = [
+    # device tree hosts libapsfixup (and other device-local Soong modules)
+    # that vendor prebuilts (e.g. libAlgoProcess) depend on. Keep this first so
+    # extract-files.py -m does not drop it from vendor/oneplus/aston/Android.bp.
+    'device/oneplus/aston',
     'hardware/oplus',
     'hardware/pixelworks/interfaces',
     'hardware/qcom-caf/sm8550',
