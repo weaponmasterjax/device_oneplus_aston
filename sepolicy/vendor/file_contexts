@@ -8,3 +8,6 @@
 
 # AOD brightness
 /sys/kernel/oplus_display/aod_light_mode_set      u:object_r:vendor_sysfs_aod_brightness:s0
+
+# PW iris
+/odm/bin/irisConfig    u:object_r:vendor_irisconfig_exec:s0
