@@ -9,16 +9,18 @@ public final class MemcUtils {
 
     private static final String MEMC_CONTROL = "memc_control";
     private static final String PROP_KEY = "sys.oplus.iris.cmd";
+    private static final String[] DEFAULT_CONFIG_LINES = {
+            "258 1 0",
+            "273 1 0",
+            "267 2 3 0",
+            "56 1 1"
+    };
 
     private SharedPreferences mSharedPrefs;
-    private Context mContext;
     protected static boolean isAppInList = false;
-    private String mDefaultConfig = null;
 
     protected MemcUtils(Context context) {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        mContext = context;
-        loadDefaultConfig();
     }
 
     public static void startService(Context context) {
@@ -40,18 +42,22 @@ public final class MemcUtils {
     }
 
     protected void executeDefaultConfig() {
-        if (mDefaultConfig == null || mDefaultConfig.isEmpty()) return;
         isAppInList = false;
-        applyConfigText(mDefaultConfig);
+        applyConfigLines(DEFAULT_CONFIG_LINES);
     }
 
     private void applyConfigText(String cfg) {
         if (cfg == null || cfg.isEmpty()) return;
         String[] lines = cfg.split("\\r?\\n");
-        for (String l : lines) {
-            String line = l.trim();
-            if (line.isEmpty()) continue;
-            setPropertyValue(line);
+        applyConfigLines(lines);
+    }
+
+    private void applyConfigLines(String[] lines) {
+        if (lines == null) return;
+        for (String line : lines) {
+            String value = line == null ? "" : line.trim();
+            if (value.isEmpty()) continue;
+            setPropertyValue(value);
         }
     }
 
@@ -66,17 +72,6 @@ public final class MemcUtils {
             } catch (Exception ex) {
                 // ignore
             }
-        }
-    }
-
-    private void loadDefaultConfig() {
-        try {
-            mDefaultConfig = mContext.getString(org.lineageos.settings.R.string.memc_default_config);
-            if (mDefaultConfig != null) {
-                mDefaultConfig = mDefaultConfig.trim();
-            }
-        } catch (Exception e) {
-            mDefaultConfig = null;
         }
     }
 
