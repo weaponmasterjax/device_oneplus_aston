@@ -11,3 +11,4 @@
 
 # PW iris
 /odm/bin/irisConfig    u:object_r:vendor_irisconfig_exec:s0
+/vendor/bin/iris_sendconfig\.sh    u:object_r:vendor_irisconfig_exec:s0

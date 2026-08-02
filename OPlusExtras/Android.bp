@@ -33,5 +33,15 @@ android_app {
     },
 
     init_rc: ["init.iris.rc"],
+
+    required: [
+        "iris_sendconfig.sh",
+    ],
+}
+
+sh_binary {
+    name: "iris_sendconfig.sh",
+    src: "iris_sendconfig.sh",
+    vendor: true,
 }
 
