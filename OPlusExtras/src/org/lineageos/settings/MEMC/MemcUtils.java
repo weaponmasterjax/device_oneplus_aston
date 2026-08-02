@@ -2,6 +2,7 @@ package org.lineageos.settings.memc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import androidx.preference.PreferenceManager;
 
@@ -9,6 +10,7 @@ public final class MemcUtils {
 
     private static final String MEMC_CONTROL = "memc_control";
     private static final String PROP_KEY = "sys.oplus.iris.cmd";
+    private static final long DELAY_MS = 80L;
     private static final String[] DEFAULT_CONFIG_LINES = {
             "258 1 0",
             "273 1 0",
@@ -58,6 +60,7 @@ public final class MemcUtils {
             String value = line == null ? "" : line.trim();
             if (value.isEmpty()) continue;
             setPropertyValue(value);
+            SystemClock.sleep(DELAY_MS);
         }
     }
 
