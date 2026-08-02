@@ -66,14 +66,14 @@ public class MemcSettingsFragment extends PreferenceFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.refresh_layout, container, false);
+        return inflater.inflate(R.layout.memc_layout, container, false);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAppsRecyclerView = view.findViewById(R.id.refresh_rv_view);
+        mAppsRecyclerView = view.findViewById(R.id.memc_rv_view);
         mAppsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAppsRecyclerView.setAdapter(mAllPackagesAdapter);
     }
@@ -175,6 +175,7 @@ public class MemcSettingsFragment extends PreferenceFragment
     private class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageView icon;
+        private ImageView configIndicator;
         private View rootView;
         private Button configure;
 
@@ -182,6 +183,7 @@ public class MemcSettingsFragment extends PreferenceFragment
             super(view);
             this.title = view.findViewById(R.id.app_name);
             this.icon = view.findViewById(R.id.app_icon);
+            this.configIndicator = view.findViewById(R.id.app_config_indicator);
             this.configure = view.findViewById(R.id.app_configure);
             this.rootView = view;
 
@@ -213,7 +215,7 @@ public class MemcSettingsFragment extends PreferenceFragment
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.refresh_list_item, parent, false));
+                    .inflate(R.layout.memc_list_item, parent, false));
         }
 
         @Override
@@ -228,6 +230,16 @@ public class MemcSettingsFragment extends PreferenceFragment
             holder.configure.setOnClickListener(v -> showConfigDialog(entry));
             mApplicationsState.ensureIcon(entry);
             holder.icon.setImageDrawable(entry.icon);
+
+            String packageName = entry.info.packageName;
+            boolean hasConfig = mMemcUtils.hasPackageConfig(packageName);
+            if (hasConfig) {
+                holder.configIndicator.setImageResource(android.R.drawable.checkbox_on_background);
+                holder.configIndicator.setVisibility(View.VISIBLE);
+            } else {
+                holder.configIndicator.setImageDrawable(null);
+                holder.configIndicator.setVisibility(View.GONE);
+            }
         }
 
         private void setEntries(List<ApplicationsState.AppEntry> entries,
