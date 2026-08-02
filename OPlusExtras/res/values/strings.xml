@@ -191,4 +191,16 @@
     <string name="vib_strength_title">System strength</string>
     <string name="vib_strength_summary">Define the strength of the vibrator</string>
 
+    <!-- MEMC -->
+    <string name="memc_title">Per-app MEMC Configuration</string>
+    <string name="memc_summary">Configure Pixelworks IRIS VPU commands on a per-app basis</string>
+    <string name="memc_config_dialog_title">MEMC configuration</string>
+    <string name="memc_reset">Reset</string>
+    <string name="memc_reset_confirm_title">Reset configurations?</string>
+    <string name="memc_reset_confirm_message">This will remove all saved per-app configurations and restore the default behavior.</string>
+    <string name="memc_notification_channel_name">MEMC Service</string>
+    <string name="memc_notification_channel_desc">Notifications when MEMC is active</string>
+    <string name="memc_notification_title">MEMC Activated</string>
+    <string name="memc_notification_content">MEMC is active for %1$s</string>
+
 </resources>

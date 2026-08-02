@@ -11,7 +11,11 @@
     android:versionCode="7"
     android:versionName="7.3">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
     <uses-permission android:name="android.permission.INJECT_EVENTS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -23,10 +27,11 @@
     <application
         android:icon="@drawable/ic_launcher_settings"
         android:label="@string/oplus_extras_title"
-        android:theme="@style/Theme.SubSettingsBase"
+        android:theme="@style/AppTheme"
         android:supportsRtl="true"
         android:defaultToDeviceProtectedStorage="true"
-        android:directBootAware="true">
+        android:directBootAware="true"
+        android:persistent="true">
 
         <receiver
             android:name=".Startup"
@@ -36,11 +41,6 @@
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".OPlusExtras" />
-        <activity
-            android:name=".slider.KeyHandler" />
 
         <!-- OPlusExtras -->
         <activity
@@ -54,6 +54,9 @@
             <meta-data
                 android:name="com.android.settings.order"
                 android:value="-265" />
+            <meta-data
+                android:name="com.android.settings.title"
+                android:resource="@string/oplus_extras_title" />
             <meta-data
                 android:name="com.android.settings.icon"
                 android:resource="@drawable/ic_oplus_extras" />
@@ -98,6 +101,28 @@
             android:name=".refreshrate.RefreshService"
             android:permission="RefreshService"
             android:exported="false" />
+
+        <!-- Per-App MEMC Activity -->
+        <activity
+            android:name=".memc.MemcActivity"
+            android:exported="true"
+            android:label="@string/memc_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Per-App MEMC Service -->
+        <service
+            android:name=".memc.MemcService"
+            android:permission="MemcService"
+            android:foregroundServiceType="specialUse|systemExempted"
+            android:exported="false">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MEMC display frame rate and color enhancement service" />
+        </service>
 
         <!-- Jitter Test Activity -->
         <activity

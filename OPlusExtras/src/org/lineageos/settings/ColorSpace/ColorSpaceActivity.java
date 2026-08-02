@@ -19,7 +19,7 @@ public class ColorSpaceActivity extends CollapsingToolbarBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(
+        getSupportFragmentManager().beginTransaction().replace(
                         com.android.settingslib.collapsingtoolbar.R.id.content_frame,
                 new ColorSpaceSettingsFragment(), TAG_COLORSPACE).commit();
     }
@@ -27,7 +27,7 @@ public class ColorSpaceActivity extends CollapsingToolbarBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
         return false;

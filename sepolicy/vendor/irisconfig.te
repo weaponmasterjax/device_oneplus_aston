@@ -8,3 +8,10 @@ allow vendor_irisconfig video_device:chr_file rw_file_perms;
 allow vendor_irisconfig video_device:chr_file ioctl;
 
 allow vendor_irisconfig vendor_file:file rx_file_perms;
+
+allow vendor_irisconfig vendor_shell_exec:file rx_file_perms;
+allow vendor_irisconfig vendor_toolbox_exec:file rx_file_perms;
+
+allow vendor_irisconfig hal_feature_irisfeature_default_exec:file rx_file_perms;
+
+domain_auto_trans(vendor_irisconfig, hal_feature_irisfeature_default_exec, hal_feature_irisfeature_default)

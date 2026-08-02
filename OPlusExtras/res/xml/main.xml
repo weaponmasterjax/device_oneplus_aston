@@ -6,8 +6,8 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:settings="http://schemas.android.com/apk/res/org.lineageos.settings"
-    android.title="@string/oplus_extras_title">
+    xmlns:settings="http://schemas.android.com/apk/org.lineageos.settings"
+    android:title="@string/oplus_extras_title">
 
     <!-- Start of alert slider Category -->
     <PreferenceCategory
@@ -80,6 +80,16 @@
             <intent android:action="android.intent.action.MAIN"
                     android:targetPackage="org.lineageos.settings"
                     android:targetClass="org.lineageos.settings.refreshrate.RefreshActivity" />
+        </Preference>
+
+        <Preference
+            android:key="per_app_memc"
+            android:title="@string/memc_title"
+            android:summary="@string/memc_summary"
+            android:persistent="false" >
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="org.lineageos.settings"
+                android:targetClass="org.lineageos.settings.memc.MemcActivity" />
         </Preference>
 
         <SwitchPreferenceCompat

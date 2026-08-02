@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import android.widget.Toast;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
@@ -51,7 +51,7 @@ import org.lineageos.settings.R;
 import org.lineageos.settings.services.*;
 import org.lineageos.settings.slider.SliderConstants;
 
-public class OPlusExtras extends PreferenceFragment
+public class OPlusExtras extends PreferenceFragmentCompat
         implements Preference.OnPreferenceChangeListener {
     private static final String TAG = OPlusExtras.class.getSimpleName();
 
@@ -79,6 +79,7 @@ public class OPlusExtras extends PreferenceFragment
     private int mHBMInfoClickCount = 0;
     private long mLastHBMInfoClickTime = 0;
     private static final int EASTER_EGG_CLICK_COUNT = 6;
+    private Toast mEasterEggToast;
 
     public static final String KEY_CATEGORY_CPU = "cpu";
     public static final String KEY_POWER_EFFICIENT_WQ_SWITCH = "power_efficient_workqueue";
@@ -218,6 +219,10 @@ public class OPlusExtras extends PreferenceFragment
                 mHBMInfoClickCount++;
                 mLastHBMInfoClickTime = now;
 
+                if (mEasterEggToast != null) {
+                    mEasterEggToast.cancel();
+                }
+
                 if (mHBMInfoClickCount == EASTER_EGG_CLICK_COUNT) {
                     Log.d(TAG, "Easter egg triggered!");
                     String url;
@@ -231,7 +236,8 @@ public class OPlusExtras extends PreferenceFragment
                         toastText = "Never gonna give you up!";
                     }
 
-                    Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
+                    mEasterEggToast = Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT);
+                    mEasterEggToast.show();
                     Intent rickRollIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     
                     try {
@@ -239,11 +245,13 @@ public class OPlusExtras extends PreferenceFragment
                             getContext().startActivity(rickRollIntent);
                         } else {
                             Log.e(TAG, "No activity found to handle ACTION_VIEW for YouTube URL");
-                            Toast.makeText(getContext(), "Couldn't open browser!", Toast.LENGTH_SHORT).show();
+                            mEasterEggToast = Toast.makeText(getContext(), "Couldn't open browser!", Toast.LENGTH_SHORT);
+                            mEasterEggToast.show();
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Failed to launch Rick Roll", e);
-                        Toast.makeText(getContext(), "Oops, something went wrong!", Toast.LENGTH_SHORT).show();
+                        mEasterEggToast = Toast.makeText(getContext(), "Oops, something went wrong!", Toast.LENGTH_SHORT);
+                        mEasterEggToast.show();
                     }
 
                     // Reset counter
@@ -251,7 +259,8 @@ public class OPlusExtras extends PreferenceFragment
 
                 } else if (mHBMInfoClickCount > (EASTER_EGG_CLICK_COUNT - 4)) {
                     int clicksLeft = EASTER_EGG_CLICK_COUNT - mHBMInfoClickCount;
-                    Toast.makeText(getContext(), clicksLeft + "...", Toast.LENGTH_SHORT).show();
+                    mEasterEggToast = Toast.makeText(getContext(), clicksLeft + "...", Toast.LENGTH_SHORT);
+                    mEasterEggToast.show();
                 }
 
                 return true;
@@ -953,6 +962,6 @@ public class OPlusExtras extends PreferenceFragment
 
     private void showWarning() {
         WarningDialogFragment fragment = new WarningDialogFragment();
-        fragment.show(getFragmentManager(), "warning_dialog");
+        fragment.show(getChildFragmentManager(), "warning_dialog");
     }
 }
