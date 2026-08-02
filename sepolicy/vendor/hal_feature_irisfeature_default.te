@@ -1,0 +1,12 @@
+allow hal_feature_irisfeature_default vendor_irisconfig:fd use;
+allow hal_feature_irisfeature_default vendor_irisconfig:fifo_file { read write getattr };
+allow hal_feature_irisfeature_default hal_graphics_composer_hwservice:hwservice_manager find;
+allow hal_feature_irisfeature_default hwservicemanager:binder { call transfer };
+allow hal_feature_irisfeature_default graphics_device:chr_file rw_file_perms;
+allow hal_feature_irisfeature_default graphics_device:dir search;
+
+binder_call(hal_feature_irisfeature_default, hal_graphics_composer_default)
+
+hal_client_domain(hal_feature_irisfeature_default, hal_graphics_composer)
+
+hwbinder_use(hal_feature_irisfeature_default)
