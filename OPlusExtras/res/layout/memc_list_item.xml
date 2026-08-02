@@ -38,13 +38,12 @@
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/app_configure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Configure"
-            android:layout_marginTop="8dp"
-            style="?attr/materialButtonStyle" />
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 
