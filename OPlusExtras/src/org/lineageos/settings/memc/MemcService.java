@@ -12,7 +12,7 @@ public class MemcService extends Service {
 
     private static final String TAG = "MemcService";
 
-    private String mPreviousApp;
+    private String mPreviousApp = "";
     private MemcUtils mMemcUtils;
     private IActivityTaskManager mActivityTaskManager;
 
@@ -25,6 +25,7 @@ public class MemcService extends Service {
             // ignore
         }
         mMemcUtils = new MemcUtils(this);
+        mMemcUtils.executeDefaultConfig();
         super.onCreate();
     }
 
