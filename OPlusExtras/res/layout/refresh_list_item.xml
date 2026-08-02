@@ -46,10 +46,12 @@
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <Spinner
-            android:id="@+id/app_mode"
+        <Button
+            android:id="@+id/app_configure"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Configure"
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 

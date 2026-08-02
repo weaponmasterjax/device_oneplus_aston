@@ -1,0 +1,10 @@
+type vendor_irisconfig, domain;
+type vendor_irisconfig_exec, exec_type, vendor_file_type, file_type;
+
+init_daemon_domain(vendor_irisconfig)
+allow vendor_irisconfig video_device:dir search;
+allow vendor_irisconfig video_device:chr_file rw_file_perms;
+allow vendor_irisconfig video_device:chr_file ioctl;
+allow vendor_irisconfig vendor_file:file rx_file_perms;
+allow vendor_irisconfig ion_device:chr_file r_file_perms;
+allow vendor_irisconfig kmsg_device:chr_file w_file_perms;

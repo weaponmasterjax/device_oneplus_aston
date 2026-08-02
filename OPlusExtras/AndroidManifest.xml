@@ -99,6 +99,23 @@
             android:permission="RefreshService"
             android:exported="false" />
 
+        <!-- Per-App MEMC Activity -->
+        <activity
+            android:name=".memc.MemcActivity"
+            android:exported="true"
+            android:label="@string/memc_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Per-App MEMC Service -->
+        <service
+            android:name=".memc.MemcService"
+            android:permission="MemcService"
+            android:exported="false" />
+
         <!-- Jitter Test Activity -->
         <activity
             android:name=".uibench.JitterTestActivity"

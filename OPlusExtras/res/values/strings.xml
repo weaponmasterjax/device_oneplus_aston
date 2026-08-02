@@ -192,4 +192,9 @@
     <string name="vib_strength_title">System strength</string>
     <string name="vib_strength_summary">Define the strength of the vibrator</string>
 
+    <!-- MEMC -->
+    <string name="memc_title">Per-app MEMC Configuration</string>
+    <string name="memc_summary">Configure Pixelworks IRIS VPU commands on a per-app basis</string>
+    <string name="memc_config_dialog_title">MEMC configuration</string>
+
 </resources>
