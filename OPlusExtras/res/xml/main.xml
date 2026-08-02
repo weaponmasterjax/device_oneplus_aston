@@ -66,6 +66,16 @@
                     android:targetClass="org.lineageos.settings.refreshrate.RefreshActivity" />
         </Preference>
 
+        <Preference
+            android:key="per_app_memc"
+            android:title="@string/memc_title"
+            android:summary="@string/memc_summary"
+            android:persistent="false" >
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="org.lineageos.settings"
+                android:targetClass="org.lineageos.settings.memc.MemcActivity" />
+        </Preference>
+
         <SwitchPreferenceCompat
             android:key="dc"
             android:title="@string/dc_mode_title"

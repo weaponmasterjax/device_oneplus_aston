@@ -18,6 +18,7 @@ import org.lineageos.settings.FileUtils;
 import org.lineageos.settings.modeswitch.*;
 import org.lineageos.settings.preferences.*;
 import org.lineageos.settings.refreshrate.RefreshUtils;
+import org.lineageos.settings.memc.MemcUtils;
 import org.lineageos.settings.services.FPSInfoService;
 
 public class Startup extends BroadcastReceiver {
@@ -31,6 +32,7 @@ public class Startup extends BroadcastReceiver {
         ColorSpaceUtils.startService(context);
         OPlusExtras.restoreSliderStates(context);
         RefreshUtils.startService(context);
+        MemcUtils.startService(context);
         VibratorStrengthPreference.restore(context);
 
         boolean enabled = false;

@@ -18,3 +18,6 @@ allow system_app vendor_sysfs_fastcharge:dir search;
 allow system_app vendor_sysfs_fastcharge:file rw_file_perms;
 allow system_app vendor_sysfs_aod_brightness:dir search;
 allow system_app vendor_sysfs_aod_brightness:file rw_file_perms;
+
+# PW iris
+set_prop(system_app, vendor_iris_prop)
