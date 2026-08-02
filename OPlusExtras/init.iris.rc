@@ -1,0 +1,2 @@
+on property:sys.oplus.iris.cmd=*
+    exec_background u:r:vendor_irisconfig:s0 root root -- /odm/bin/irisConfig ${sys.oplus.iris.cmd}
