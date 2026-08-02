@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.UserHandle;
 import androidx.preference.PreferenceManager;
 
-import java.lang.reflect.Method;
-
 public final class MemcUtils {
 
     private static final String MEMC_CONTROL = "memc_control";
@@ -37,28 +35,34 @@ public final class MemcUtils {
     }
 
     protected boolean hasPackageConfig(String packageName) {
-        return mSharedPrefs.contains(MEMC_CONTROL + ":" + packageName);
+        String cfg = mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
+        return cfg != null && !cfg.trim().isEmpty();
     }
 
     protected void executeDefaultConfig() {
         if (mDefaultConfig == null || mDefaultConfig.isEmpty()) return;
         isAppInList = false;
-        String[] lines = mDefaultConfig.split("\\r?\\n");
+        applyConfigText(mDefaultConfig);
+    }
+
+    private void applyConfigText(String cfg) {
+        if (cfg == null || cfg.isEmpty()) return;
+        String[] lines = cfg.split("\\r?\\n");
         for (String l : lines) {
             String line = l.trim();
             if (line.isEmpty()) continue;
-            setPropertyLine(line);
+            setPropertyValue(line);
         }
     }
 
-    private void setPropertyLine(String line) {
+    private void setPropertyValue(String value) {
         try {
             Class<?> sp = Class.forName("android.os.SystemProperties");
             java.lang.reflect.Method set = sp.getMethod("set", String.class, String.class);
-            set.invoke(null, PROP_KEY, line);
+            set.invoke(null, PROP_KEY, value);
         } catch (Exception e) {
             try {
-                Runtime.getRuntime().exec(new String[]{"setprop", PROP_KEY, line});
+                Runtime.getRuntime().exec(new String[]{"setprop", PROP_KEY, value});
             } catch (Exception ex) {
                 // ignore
             }
@@ -80,11 +84,6 @@ public final class MemcUtils {
         String cfg = getConfigForPackage(packageName);
         if (cfg == null || cfg.isEmpty()) return;
         isAppInList = true;
-        String[] lines = cfg.split("\\r?\\n");
-        for (String l : lines) {
-            String line = l.trim();
-            if (line.isEmpty()) continue;
-            setPropertyLine(line);
-        }
+        applyConfigText(cfg);
     }
 }
