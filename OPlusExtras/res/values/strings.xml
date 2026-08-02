@@ -196,5 +196,8 @@
     <string name="memc_title">Per-app MEMC Configuration</string>
     <string name="memc_summary">Configure Pixelworks IRIS VPU commands on a per-app basis</string>
     <string name="memc_config_dialog_title">MEMC configuration</string>
+    <string name="memc_reset">Reset</string>
+    <string name="memc_reset_confirm_title">Reset configurations?</string>
+    <string name="memc_reset_confirm_message">This will remove all saved per-app configurations and restore the default behavior.</string>
 
 </resources>

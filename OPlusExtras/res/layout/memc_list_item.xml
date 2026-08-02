@@ -54,6 +54,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
         android:contentDescription="@null"
-        android:visibility="gone" 
-        android:src="@drawable/ic_refresh_rate"/>
+        android:visibility="gone"
+        android:src="@drawable/ic_config_avail"/>
 </LinearLayout>
