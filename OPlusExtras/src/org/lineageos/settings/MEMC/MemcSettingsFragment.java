@@ -9,6 +9,9 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -234,11 +237,11 @@ public class MemcSettingsFragment extends PreferenceFragment
             String packageName = entry.info.packageName;
             boolean hasConfig = mMemcUtils.hasPackageConfig(packageName);
             if (hasConfig) {
-                holder.configIndicator.setImageResource(android.R.drawable.checkbox_on_background);
+                holder.configIndicator.setImageResource(R.drawable.ic_config_avail);
                 holder.configIndicator.setVisibility(View.VISIBLE);
             } else {
-                holder.configIndicator.setImageDrawable(null);
-                holder.configIndicator.setVisibility(View.GONE);
+                holder.configIndicator.setImageResource(R.drawable.ic_config_empty);
+                holder.configIndicator.setVisibility(View.VISIBLE);
             }
         }
 
