@@ -12,4 +12,6 @@ allow vendor_irisconfig vendor_file:file rx_file_perms;
 allow vendor_irisconfig vendor_shell_exec:file rx_file_perms;
 allow vendor_irisconfig vendor_toolbox_exec:file rx_file_perms;
 
-allow vendor_irisconfig vendor_irisconfig_exec:file { rx_file_perms execute_no_trans };
+allow vendor_irisconfig hal_feature_irisfeature_default_exec:file rx_file_perms;
+
+domain_auto_trans(vendor_irisconfig, hal_feature_irisfeature_default_exec, hal_feature_irisfeature_default)
