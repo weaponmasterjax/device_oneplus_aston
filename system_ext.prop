@@ -10,3 +10,6 @@ ro.mist.front=16MP
 ro.mist.platform=SM8550-AB
 ro.mist.screen=6.78' LTPO4 AMOLED
 ro.mist.device.name=OnePlus 12R
+
+# MEMC
+persist.sys.display.iris.auto_memc=0
