@@ -12,6 +12,9 @@ import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.view.Display;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MemcService extends Service {
 
     private static final String TAG = "MemcService";
@@ -20,6 +23,7 @@ public class MemcService extends Service {
     private MemcUtils mMemcUtils;
     private IActivityTaskManager mActivityTaskManager;
     private DisplayManager mDisplayManager;
+    private ExecutorService mDetectionExecutor;
 
     @Override
     public void onCreate() {
@@ -36,17 +40,30 @@ public class MemcService extends Service {
         }
 
         mMemcUtils = new MemcUtils(this);
-        mMemcUtils.executeDefaultConfig();
+        mDetectionExecutor = Executors.newSingleThreadExecutor();
+        refreshCurrentAppConfig();
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        refreshCurrentAppConfig();
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
+        if (mActivityTaskManager != null) {
+            try {
+                mActivityTaskManager.unregisterTaskStackListener(mTaskListener);
+            } catch (RemoteException e) {
+                // ignore
+            }
+        }
+        if (mDetectionExecutor != null) {
+            mDetectionExecutor.shutdownNow();
+            mDetectionExecutor = null;
+        }
         if (mDisplayManager != null) {
             mDisplayManager.unregisterDisplayListener(mDisplayListener);
         }
@@ -84,11 +101,22 @@ public class MemcService extends Service {
     private final android.app.TaskStackListener mTaskListener = new android.app.TaskStackListener() {
         @Override
         public void onTaskStackChanged() {
+            refreshCurrentAppConfig();
+        }
+    };
+
+    private void refreshCurrentAppConfig() {
+        if (mDetectionExecutor == null || mMemcUtils == null || mActivityTaskManager == null) {
+            return;
+        }
+
+        mDetectionExecutor.execute(() -> {
             try {
                 final RootTaskInfo info = mActivityTaskManager.getFocusedRootTaskInfo();
                 if (info == null || info.topActivity == null) {
                     return;
                 }
+
                 String foregroundApp = info.topActivity.getPackageName();
                 if (!foregroundApp.equals(mPreviousApp)) {
                     if (mMemcUtils.hasPackageConfig(foregroundApp)) {
@@ -98,7 +126,9 @@ public class MemcService extends Service {
                     }
                     mPreviousApp = foregroundApp;
                 }
-            } catch (Exception e) {}
-        }
-    };
+            } catch (Exception e) {
+                // ignore
+            }
+        });
+    }
 }
