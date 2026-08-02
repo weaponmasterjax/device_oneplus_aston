@@ -227,7 +227,7 @@ public class MemcSettingsFragment extends PreferenceFragment
                 return;
             }
             holder.title.setText(entry.label);
-            holder.configure.setOnClickListener(v -> showConfigDialog(entry));
+            holder.configure.setOnClickListener(v -> showConfigDialog(entry, holder.getBindingAdapterPosition()));
             mApplicationsState.ensureIcon(entry);
             holder.icon.setImageDrawable(entry.icon);
 
@@ -253,7 +253,7 @@ public class MemcSettingsFragment extends PreferenceFragment
             notifyDataSetChanged();
         }
 
-        private void showConfigDialog(ApplicationsState.AppEntry entry) {
+        private void showConfigDialog(ApplicationsState.AppEntry entry, int position) {
             Context context = getActivity();
             String pkg = entry.info.packageName;
             String existing = mMemcUtils.getConfigForPackage(pkg);
@@ -268,6 +268,9 @@ public class MemcSettingsFragment extends PreferenceFragment
                     .setPositiveButton(android.R.string.ok, (d, which) -> {
                         String value = input.getText().toString();
                         mMemcUtils.writePackageConfig(pkg, value);
+                        if (position != RecyclerView.NO_POSITION) {
+                            notifyItemChanged(position);
+                        }
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
