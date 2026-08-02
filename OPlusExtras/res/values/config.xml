@@ -87,11 +87,4 @@
     <!-- Touch Gestures -->
     <string name="config_TouchGesturePackage" translatable="false">com.android.touch.gestures</string>
     <string name="config_TouchGestureStartActivity" translatable="false">com.android.touch.gestures.TouchscreenGestureSettings</string>
-
-    <!-- Per-app MEMC default configuration. Each non-empty line will be executed when the target app opens -->
-    <string name="memc_default_config" translatable="false"><![CDATA[
-    258 1 0
-    273 1 0
-    267 2 3 0
-    ]]></string>
 </resources>
