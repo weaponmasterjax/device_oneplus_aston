@@ -14,13 +14,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.hardware.display.DisplayManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
-import android.os.SystemProperties;
-import android.view.Display;
 
 import org.lineageos.settings.R;
 
@@ -37,7 +34,6 @@ public class MemcService extends Service {
     private String mPreviousApp = "";
     private MemcUtils mMemcUtils;
     private IActivityTaskManager mActivityTaskManager;
-    private DisplayManager mDisplayManager;
     private NotificationManager mNotificationManager;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -67,11 +63,6 @@ public class MemcService extends Service {
             // ignore
         }
 
-        mDisplayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
-        if (mDisplayManager != null) {
-            mDisplayManager.registerDisplayListener(mDisplayListener, null);
-        }
-
         registerReceiver();
         applyConfig("");
     }
@@ -88,9 +79,6 @@ public class MemcService extends Service {
             unregisterReceiver(mIntentReceiver);
         } catch (Exception e) {
             // ignore
-        }
-        if (mDisplayManager != null) {
-            mDisplayManager.unregisterDisplayListener(mDisplayListener);
         }
         if (mCurrentConfigTask != null) {
             mCurrentConfigTask.cancel(false);
@@ -183,29 +171,6 @@ public class MemcService extends Service {
             }
         } catch (Exception e) {}
     }
-
-    private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
-        @Override
-        public void onDisplayAdded(int displayId) {
-        }
-
-        @Override
-        public void onDisplayRemoved(int displayId) {
-        }
-
-        @Override
-        public void onDisplayChanged(int displayId) {
-            Display display = mDisplayManager != null ? mDisplayManager.getDisplay(displayId) : null;
-            if (display == null || displayId != Display.DEFAULT_DISPLAY) {
-                return;
-            }
-
-            int state = display.getState();
-            if (state == Display.STATE_DOZE || state == Display.STATE_DOZE_SUSPEND) {
-                SystemProperties.set("sys.oplus.iris.cmd", "56 1 1");
-            }
-        }
-    };
 
     private final android.app.TaskStackListener mTaskListener = new android.app.TaskStackListener() {
         @Override
