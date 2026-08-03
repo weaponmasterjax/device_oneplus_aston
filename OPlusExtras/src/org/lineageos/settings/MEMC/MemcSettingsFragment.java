@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.lineageos.settings.R;
 
@@ -378,25 +379,40 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
 
         private void showConfigDialog(ApplicationsState.AppEntry entry, int position) {
             Context context = getActivity();
+            if (context == null || entry == null) return;
+
             String pkg = entry.info.packageName;
             String existing = mMemcUtils.getConfigForPackage(pkg);
 
-            final EditText input = new EditText(context);
-            input.setMinLines(4);
-            input.setText(existing != null ? existing : "");
+            View view = LayoutInflater.from(context).inflate(R.layout.dialog_memc_config, null);
+            EditText input = view.findViewById(R.id.memc_config_input);
+            if (input != null) {
+                input.setText(existing != null ? existing : "");
+            }
 
-            new AlertDialog.Builder(context)
-                    .setTitle(R.string.memc_config_dialog_title)
-                    .setView(input)
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
+                    .setTitle(entry.label)
+                    .setMessage(pkg)
+                    .setView(view)
                     .setPositiveButton(android.R.string.ok, (d, which) -> {
-                        String value = input.getText().toString();
+                        String value = input != null ? input.getText().toString() : "";
                         mMemcUtils.writePackageConfig(pkg, value);
                         if (position != RecyclerView.NO_POSITION) {
                             notifyItemChanged(position);
                         }
                     })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
+                    .setNegativeButton(android.R.string.cancel, null);
+
+            if (!TextUtils.isEmpty(existing)) {
+                builder.setNeutralButton(R.string.memc_reset, (d, which) -> {
+                    mMemcUtils.removePackageConfig(pkg);
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(position);
+                    }
+                });
+            }
+
+            builder.show();
         }
     }
 
