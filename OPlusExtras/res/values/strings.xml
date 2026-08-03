@@ -199,5 +199,9 @@
     <string name="memc_reset">Reset</string>
     <string name="memc_reset_confirm_title">Reset configurations?</string>
     <string name="memc_reset_confirm_message">This will remove all saved per-app configurations and restore the default behavior.</string>
+    <string name="memc_notification_channel_name">MEMC Service</string>
+    <string name="memc_notification_channel_desc">Notifications when MEMC is active</string>
+    <string name="memc_notification_title">MEMC Activated</string>
+    <string name="memc_notification_content">MEMC is active for %1$s</string>
 
 </resources>
