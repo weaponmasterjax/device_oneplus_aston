@@ -417,14 +417,27 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
             String existing = mMemcUtils.getConfigForPackage(pkg);
 
             View view = LayoutInflater.from(themedContext).inflate(R.layout.dialog_memc_config, null);
+
+            ImageView iconView = view.findViewById(R.id.dialog_app_icon);
+            TextView titleView = view.findViewById(R.id.dialog_app_title);
+            TextView packageView = view.findViewById(R.id.dialog_app_package);
             EditText input = view.findViewById(R.id.memc_config_input);
+
+            if (iconView != null) {
+                mApplicationsState.ensureIcon(entry);
+                iconView.setImageDrawable(entry.icon);
+            }
+            if (titleView != null) {
+                titleView.setText(entry.label);
+            }
+            if (packageView != null) {
+                packageView.setText(pkg);
+            }
             if (input != null) {
                 input.setText(existing != null ? existing : "");
             }
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(themedContext)
-                    .setTitle(entry.label)
-                    .setMessage(pkg)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok, (d, which) -> {
                         String value = input != null ? input.getText().toString() : "";
