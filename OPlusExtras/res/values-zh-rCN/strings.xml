@@ -157,6 +157,8 @@
     <string name="game_mode_warning">可能会降低电池寿命</string>
     <string name="tp_edge_limit_mode_title">触摸屏边缘限制</string>
     <string name="tp_edge_limit_mode_summary">禁用触摸屏边缘限制</string>
+    <string name="touch_gesture_settings_title">触摸手势</string>
+    <string name="touch_gesture_settings_summary">打开内置触摸手势配置</string>
 
     <!-- UiBench -->
     <string name="category_uibench">抖动</string>
@@ -174,6 +176,8 @@
     <!-- AOD Brightness -->
     <string name="aod_brightness_title">更高的 AOD 亮度</string>
     <string name="aod_brightness_summary">是否为常显显示使用更高亮度</string>
+    <string name="ltpo_title">LTPO和自适应刷新率</string>
+    <string name="ltpo_summary">启用LTPO和自适应刷新率支持。更改需重启生效。</string>
 
     <!-- Audio -->
     <string name="category_audio">音效</string>
@@ -186,5 +190,17 @@
     <string name="category_vibrator">振动</string>
     <string name="vib_strength_title">振动强度</string>
     <string name="vib_strength_summary">定义振动马达的强度</string>
+
+    <!-- MEMC -->
+    <string name="memc_title">独显芯片设置</string>
+    <string name="memc_summary">修改独显芯片的配置</string>
+    <string name="memc_config_dialog_title">独显芯片配置</string>
+    <string name="memc_reset">重置</string>
+    <string name="memc_reset_confirm_title">重置配置？</string>
+    <string name="memc_reset_confirm_message">这会移除所有保存的应用配置并恢复默认行为。</string>
+    <string name="memc_notification_channel_name">独显芯片服务</string>
+    <string name="memc_notification_channel_desc">独显芯片激活时的通知</string>
+    <string name="memc_notification_title">独显芯片已激活</string>
+    <string name="memc_notification_content">独显芯片正在为 %1$s 工作</string>
 
 </resources>
