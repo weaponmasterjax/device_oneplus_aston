@@ -230,7 +230,9 @@ public class MemcSettingsFragment extends PreferenceFragment
                 return;
             }
             holder.title.setText(entry.label);
-            holder.configure.setOnClickListener(v -> showConfigDialog(entry, holder.getBindingAdapterPosition()));
+            View.OnClickListener clickListener = v -> showConfigDialog(entry, holder.getBindingAdapterPosition());
+            holder.configure.setOnClickListener(clickListener);
+            holder.itemView.setOnClickListener(clickListener);
             mApplicationsState.ensureIcon(entry);
             holder.icon.setImageDrawable(entry.icon);
 
