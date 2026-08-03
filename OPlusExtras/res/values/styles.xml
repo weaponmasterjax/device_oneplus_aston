@@ -5,6 +5,10 @@
 -->
 <resources>
 
+    <style name="AppTheme" parent="@style/Theme.SubSettingsBase">
+        <item name="android:colorControlHighlight">?android:attr/colorAccent</item>
+    </style>
+
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay.SettingsBase">
     </style>
     <style name="AppTheme.Transparent" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
