@@ -6,7 +6,7 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.SubSettingsBase">
-        <item name="android:colorControlHighlight">?android:attr/colorAccent</item>
+        <item name="android:colorControlHighlight">#33ffffff</item>
     </style>
 
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay.SettingsBase">

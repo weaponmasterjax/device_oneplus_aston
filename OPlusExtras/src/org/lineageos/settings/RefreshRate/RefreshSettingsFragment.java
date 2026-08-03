@@ -25,6 +25,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.preference.PreferenceFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class RefreshSettingsFragment extends PreferenceFragment
@@ -63,6 +68,7 @@ public class RefreshSettingsFragment extends PreferenceFragment
     private RecyclerView mAppsRecyclerView;
 
     private RefreshUtils mRefreshUtils;
+    private String mSearchFilter;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -71,6 +77,7 @@ public class RefreshSettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         mApplicationsState = ApplicationsState.getInstance(getActivity().getApplication());
         mSession = mApplicationsState.newSession(this);
@@ -80,6 +87,31 @@ public class RefreshSettingsFragment extends PreferenceFragment
         mAllPackagesAdapter = new AllPackagesAdapter(getActivity());
 
         mRefreshUtils = new RefreshUtils(getActivity());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        if (searchItem != null) {
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            if (searchView != null) {
+                searchView.setQueryHint(getString(android.R.string.search_go));
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        mSearchFilter = newText;
+                        mAllPackagesAdapter.filter(newText);
+                        return true;
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -274,6 +306,7 @@ public class RefreshSettingsFragment extends PreferenceFragment
     private class AllPackagesAdapter extends RecyclerView.Adapter<ViewHolder>
             implements AdapterView.OnItemSelectedListener, SectionIndexer {
 
+        private List<ApplicationsState.AppEntry> mAllEntries = new ArrayList<>();
         private List<ApplicationsState.AppEntry> mEntries = new ArrayList<>();
         private String[] mSections;
         private int[] mPositions;
@@ -321,11 +354,33 @@ public class RefreshSettingsFragment extends PreferenceFragment
 
         private void setEntries(List<ApplicationsState.AppEntry> entries,
                 List<String> sections, List<Integer> positions) {
-            mEntries = entries;
+            mAllEntries = new ArrayList<>(entries);
             mSections = sections.toArray(new String[sections.size()]);
             mPositions = new int[positions.size()];
             for (int i = 0; i < positions.size(); i++) {
                 mPositions[i] = positions.get(i);
+            }
+            filter(mSearchFilter);
+        }
+
+        public void filter(String query) {
+            if (mAllEntries == null || mAllEntries.isEmpty()) {
+                return;
+            }
+            if (TextUtils.isEmpty(query)) {
+                mEntries = new ArrayList<>(mAllEntries);
+            } else {
+                String lowerQuery = query.toLowerCase(Locale.getDefault());
+                List<ApplicationsState.AppEntry> filtered = new ArrayList<>();
+                for (ApplicationsState.AppEntry entry : mAllEntries) {
+                    if (entry == null) continue;
+                    boolean matchesLabel = entry.label != null && entry.label.toLowerCase(Locale.getDefault()).contains(lowerQuery);
+                    boolean matchesPkg = entry.info != null && entry.info.packageName != null && entry.info.packageName.toLowerCase(Locale.getDefault()).contains(lowerQuery);
+                    if (matchesLabel || matchesPkg) {
+                        filtered.add(entry);
+                    }
+                }
+                mEntries = filtered;
             }
             notifyDataSetChanged();
         }
