@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import android.widget.Toast;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
@@ -51,7 +51,7 @@ import org.lineageos.settings.R;
 import org.lineageos.settings.services.*;
 import org.lineageos.settings.slider.SliderConstants;
 
-public class OPlusExtras extends PreferenceFragment
+public class OPlusExtras extends PreferenceFragmentCompat
         implements Preference.OnPreferenceChangeListener {
     private static final String TAG = OPlusExtras.class.getSimpleName();
 
@@ -959,6 +959,6 @@ public class OPlusExtras extends PreferenceFragment
 
     private void showWarning() {
         WarningDialogFragment fragment = new WarningDialogFragment();
-        fragment.show(getFragmentManager(), "warning_dialog");
+        fragment.show(getChildFragmentManager(), "warning_dialog");
     }
 }
