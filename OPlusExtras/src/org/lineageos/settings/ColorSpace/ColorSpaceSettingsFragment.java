@@ -84,10 +84,27 @@ public class ColorSpaceSettingsFragment extends PreferenceFragmentCompat
         inflater.inflate(R.menu.menu_search, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
         if (searchItem != null) {
-            SearchView searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null) {
+            View actionView = searchItem.getActionView();
+            if (actionView instanceof android.widget.SearchView) {
+                android.widget.SearchView searchView = (android.widget.SearchView) actionView;
                 searchView.setQueryHint(getString(android.R.string.search_go));
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        mSearchFilter = newText;
+                        mAllPackagesAdapter.filter(newText);
+                        return true;
+                    }
+                });
+            } else if (actionView instanceof androidx.appcompat.widget.SearchView) {
+                androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) actionView;
+                searchView.setQueryHint(getString(android.R.string.search_go));
+                searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         return false;
