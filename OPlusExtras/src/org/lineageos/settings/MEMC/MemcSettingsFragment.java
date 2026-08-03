@@ -22,7 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class MemcSettingsFragment extends PreferenceFragment
+public class MemcSettingsFragment extends PreferenceFragmentCompat
         implements ApplicationsState.Callbacks {
 
     private AllPackagesAdapter mAllPackagesAdapter;
