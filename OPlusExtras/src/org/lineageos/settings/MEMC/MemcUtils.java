@@ -2,7 +2,7 @@ package org.lineageos.settings.memc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import androidx.preference.PreferenceManager;
@@ -23,13 +23,14 @@ public final class MemcUtils {
     private static final String KEY_MIN_REFRESH_RATE = Settings.System.MIN_REFRESH_RATE;
     private static final float MEMC_REFRESH_RATE = 120f;
 
+    private static final Object sLock = new Object();
     private static float sSavedMinRefreshRate;
     private static float sSavedPeakRefreshRate;
     private static boolean sSavedRefreshRate = false;
 
     private final Context mContext;
     private SharedPreferences mSharedPrefs;
-    protected static boolean isAppInList = false;
+    protected static volatile boolean isAppInList = false;
 
     protected MemcUtils(Context context) {
         mContext = context;
@@ -75,32 +76,36 @@ public final class MemcUtils {
     private void applyConfigLines(String[] lines) {
         if (lines == null) return;
         for (String line : lines) {
+            if (Thread.currentThread().isInterrupted()) {
+                break;
+            }
             String value = line == null ? "" : line.trim();
             if (value.isEmpty()) continue;
             setPropertyValue(value);
-            SystemClock.sleep(DELAY_MS);
+            try {
+                Thread.sleep(DELAY_MS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
     }
 
     private void setPropertyValue(String value) {
         try {
-            Class<?> sp = Class.forName("android.os.SystemProperties");
-            java.lang.reflect.Method set = sp.getMethod("set", String.class, String.class);
-            set.invoke(null, PROP_KEY, value);
+            SystemProperties.set(PROP_KEY, value);
         } catch (Exception e) {
-            try {
-                Runtime.getRuntime().exec(new String[]{"setprop", PROP_KEY, value});
-            } catch (Exception ex) {
-                // ignore
-            }
+            // ignore
         }
     }
 
     protected void executeConfig(String packageName) {
         String cfg = getConfigForPackage(packageName);
         if (cfg == null || cfg.isEmpty()) return;
-        if (!sSavedRefreshRate) {
-            saveOriginalRefreshRate();
+        synchronized (sLock) {
+            if (!sSavedRefreshRate) {
+                saveOriginalRefreshRate();
+            }
         }
         isAppInList = true;
         applyConfigText(cfg);
@@ -118,16 +123,18 @@ public final class MemcUtils {
     }
 
     private void restoreOriginalRefreshRate() {
-        if (!sSavedRefreshRate) {
-            return;
-        }
-        try {
-            Settings.System.putFloat(mContext.getContentResolver(), KEY_MIN_REFRESH_RATE, sSavedMinRefreshRate);
-            Settings.System.putFloat(mContext.getContentResolver(), KEY_PEAK_REFRESH_RATE, sSavedPeakRefreshRate);
-        } catch (Exception e) {
-            // ignore
-        } finally {
-            sSavedRefreshRate = false;
+        synchronized (sLock) {
+            if (!sSavedRefreshRate) {
+                return;
+            }
+            try {
+                Settings.System.putFloat(mContext.getContentResolver(), KEY_MIN_REFRESH_RATE, sSavedMinRefreshRate);
+                Settings.System.putFloat(mContext.getContentResolver(), KEY_PEAK_REFRESH_RATE, sSavedPeakRefreshRate);
+            } catch (Exception e) {
+                // ignore
+            } finally {
+                sSavedRefreshRate = false;
+            }
         }
     }
 

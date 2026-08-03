@@ -20,6 +20,10 @@ import android.view.Display;
 
 import org.lineageos.settings.R;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class MemcService extends Service {
 
     private static final String TAG = "MemcService";
@@ -31,6 +35,9 @@ public class MemcService extends Service {
     private IActivityTaskManager mActivityTaskManager;
     private DisplayManager mDisplayManager;
     private NotificationManager mNotificationManager;
+
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private Future<?> mCurrentConfigTask;
 
     @Override
     public void onCreate() {
@@ -50,7 +57,7 @@ public class MemcService extends Service {
         }
 
         mMemcUtils = new MemcUtils(this);
-        mMemcUtils.executeDefaultConfig();
+        applyConfig("");
         super.onCreate();
     }
 
@@ -64,6 +71,10 @@ public class MemcService extends Service {
         if (mDisplayManager != null) {
             mDisplayManager.unregisterDisplayListener(mDisplayListener);
         }
+        if (mCurrentConfigTask != null) {
+            mCurrentConfigTask.cancel(true);
+        }
+        mExecutor.shutdownNow();
         hideNotification();
         super.onDestroy();
     }
@@ -71,6 +82,20 @@ public class MemcService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private synchronized void applyConfig(final String packageName) {
+        if (mCurrentConfigTask != null && !mCurrentConfigTask.isDone()) {
+            mCurrentConfigTask.cancel(true);
+        }
+
+        if (mMemcUtils.hasPackageConfig(packageName)) {
+            showNotification(packageName);
+            mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
+        } else {
+            hideNotification();
+            mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeDefaultConfig());
+        }
     }
 
     private void createNotificationChannel() {
@@ -150,13 +175,7 @@ public class MemcService extends Service {
                 }
                 String foregroundApp = info.topActivity.getPackageName();
                 if (!foregroundApp.equals(mPreviousApp)) {
-                    if (mMemcUtils.hasPackageConfig(foregroundApp)) {
-                        mMemcUtils.executeConfig(foregroundApp);
-                        showNotification(foregroundApp);
-                    } else {
-                        mMemcUtils.executeDefaultConfig();
-                        hideNotification();
-                    }
+                    applyConfig(foregroundApp);
                     mPreviousApp = foregroundApp;
                 }
             } catch (Exception e) {}
