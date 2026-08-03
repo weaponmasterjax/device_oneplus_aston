@@ -46,6 +46,10 @@ public final class MemcUtils {
         mSharedPrefs.edit().putString(MEMC_CONTROL + ":" + packageName, config).apply();
     }
 
+    protected void removePackageConfig(String packageName) {
+        mSharedPrefs.edit().remove(MEMC_CONTROL + ":" + packageName).apply();
+    }
+
     protected String getConfigForPackage(String packageName) {
         return mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
     }
