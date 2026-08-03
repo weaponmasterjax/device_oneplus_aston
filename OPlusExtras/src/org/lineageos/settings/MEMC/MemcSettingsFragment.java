@@ -179,7 +179,10 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
         Context context = getActivity();
         if (context == null) return;
 
-        new MaterialAlertDialogBuilder(context)
+        Context themedContext = new android.view.ContextThemeWrapper(
+                context, com.google.android.material.R.style.Theme_Material3_DayNight_NoActionBar);
+
+        new MaterialAlertDialogBuilder(themedContext)
                 .setTitle(R.string.memc_reset_confirm_title)
                 .setMessage(R.string.memc_reset_confirm_message)
                 .setPositiveButton(R.string.memc_reset, (d, which) -> {
@@ -407,16 +410,19 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
             Context context = getActivity();
             if (context == null || entry == null) return;
 
+            Context themedContext = new android.view.ContextThemeWrapper(
+                    context, com.google.android.material.R.style.Theme_Material3_DayNight_NoActionBar);
+
             String pkg = entry.info.packageName;
             String existing = mMemcUtils.getConfigForPackage(pkg);
 
-            View view = LayoutInflater.from(context).inflate(R.layout.dialog_memc_config, null);
+            View view = LayoutInflater.from(themedContext).inflate(R.layout.dialog_memc_config, null);
             EditText input = view.findViewById(R.id.memc_config_input);
             if (input != null) {
                 input.setText(existing != null ? existing : "");
             }
 
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(themedContext)
                     .setTitle(entry.label)
                     .setMessage(pkg)
                     .setView(view)
