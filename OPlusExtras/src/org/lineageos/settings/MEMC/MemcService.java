@@ -14,9 +14,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ServiceInfo;
 import android.hardware.display.DisplayManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.view.Display;
@@ -39,6 +40,7 @@ public class MemcService extends Service {
     private DisplayManager mDisplayManager;
     private NotificationManager mNotificationManager;
 
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private Future<?> mCurrentConfigTask;
 
@@ -46,6 +48,7 @@ public class MemcService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             mPreviousApp = "";
+            checkForegroundApp();
         }
     };
 
@@ -80,6 +83,7 @@ public class MemcService extends Service {
 
     @Override
     public void onDestroy() {
+        mHandler.removeCallbacks(mCheckTaskRunnable);
         try {
             unregisterReceiver(mIntentReceiver);
         } catch (Exception e) {
@@ -113,11 +117,11 @@ public class MemcService extends Service {
             mCurrentConfigTask.cancel(false);
         }
 
-        updateNotification(packageName);
-
         if (packageName != null && mMemcUtils.hasPackageConfig(packageName)) {
+            showNotification(packageName);
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
         } else {
+            hideNotification();
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeDefaultConfig());
         }
     }
@@ -133,46 +137,51 @@ public class MemcService extends Service {
         }
     }
 
-    private void updateNotification(String packageName) {
+    private void showNotification(String packageName) {
         if (mNotificationManager == null) return;
 
-        boolean hasConfig = packageName != null && !packageName.isEmpty() && mMemcUtils.hasPackageConfig(packageName);
         CharSequence appLabel = packageName;
-        if (hasConfig) {
-            try {
-                PackageManager pm = getPackageManager();
-                ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
-                appLabel = pm.getApplicationLabel(ai);
-            } catch (PackageManager.NameNotFoundException e) {
-                // ignore fallback to packageName
-            }
+        try {
+            PackageManager pm = getPackageManager();
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            appLabel = pm.getApplicationLabel(ai);
+        } catch (PackageManager.NameNotFoundException e) {
+            // ignore fallback to packageName
         }
 
         Intent intent = new Intent(this, MemcActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        Notification.Builder builder = new Notification.Builder(this, CHANNEL_ID)
+        Notification notification = new Notification.Builder(this, CHANNEL_ID)
+                .setContentTitle(getString(R.string.memc_notification_title))
+                .setContentText(getString(R.string.memc_notification_content, appLabel))
                 .setSmallIcon(R.drawable.ic_motion_settings)
                 .setOngoing(true)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .build();
 
-        if (hasConfig) {
-            builder.setContentTitle(getString(R.string.memc_notification_title))
-                    .setContentText(getString(R.string.memc_notification_content, appLabel));
-        } else {
-            builder.setContentTitle(getString(R.string.memc_notification_channel_name))
-                    .setContentText(getString(R.string.memc_summary));
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private void hideNotification() {
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(NOTIFICATION_ID);
         }
+    }
 
-        Notification notification = builder.build();
-
+    private void checkForegroundApp() {
         try {
-            startForeground(NOTIFICATION_ID, notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE | ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
-        } catch (Exception e) {
-            mNotificationManager.notify(NOTIFICATION_ID, notification);
-        }
+            final RootTaskInfo info = mActivityTaskManager.getFocusedRootTaskInfo();
+            if (info == null || info.topActivity == null) {
+                return;
+            }
+            String foregroundApp = info.topActivity.getPackageName();
+            if (foregroundApp != null && !foregroundApp.equals(mPreviousApp)) {
+                applyConfig(foregroundApp);
+                mPreviousApp = foregroundApp;
+            }
+        } catch (Exception e) {}
     }
 
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
@@ -201,17 +210,11 @@ public class MemcService extends Service {
     private final android.app.TaskStackListener mTaskListener = new android.app.TaskStackListener() {
         @Override
         public void onTaskStackChanged() {
-            try {
-                final RootTaskInfo info = mActivityTaskManager.getFocusedRootTaskInfo();
-                if (info == null || info.topActivity == null) {
-                    return;
-                }
-                String foregroundApp = info.topActivity.getPackageName();
-                if (foregroundApp != null && !foregroundApp.equals(mPreviousApp)) {
-                    applyConfig(foregroundApp);
-                    mPreviousApp = foregroundApp;
-                }
-            } catch (Exception e) {}
+            checkForegroundApp();
+            mHandler.removeCallbacks(mCheckTaskRunnable);
+            mHandler.postDelayed(mCheckTaskRunnable, 250);
         }
     };
+
+    private final Runnable mCheckTaskRunnable = this::checkForegroundApp;
 }
