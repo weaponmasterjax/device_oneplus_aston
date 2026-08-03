@@ -38,8 +38,12 @@ public final class MemcUtils {
     }
 
     public static void startService(Context context) {
-        context.startServiceAsUser(new android.content.Intent(context, MemcService.class),
-                UserHandle.CURRENT);
+        android.content.Intent intent = new android.content.Intent(context, MemcService.class);
+        try {
+            context.startForegroundServiceAsUser(intent, UserHandle.CURRENT);
+        } catch (Exception e) {
+            context.startServiceAsUser(intent, UserHandle.CURRENT);
+        }
     }
 
     protected void writePackageConfig(String packageName, String config) {

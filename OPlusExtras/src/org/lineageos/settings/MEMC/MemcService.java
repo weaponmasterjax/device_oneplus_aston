@@ -113,11 +113,11 @@ public class MemcService extends Service {
             mCurrentConfigTask.cancel(false);
         }
 
+        updateNotification(packageName);
+
         if (packageName != null && mMemcUtils.hasPackageConfig(packageName)) {
-            showNotification(packageName);
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
         } else {
-            hideNotification();
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeDefaultConfig());
         }
     }
@@ -133,46 +133,45 @@ public class MemcService extends Service {
         }
     }
 
-    private void showNotification(String packageName) {
+    private void updateNotification(String packageName) {
         if (mNotificationManager == null) return;
 
+        boolean hasConfig = packageName != null && !packageName.isEmpty() && mMemcUtils.hasPackageConfig(packageName);
         CharSequence appLabel = packageName;
-        try {
-            PackageManager pm = getPackageManager();
-            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
-            appLabel = pm.getApplicationLabel(ai);
-        } catch (PackageManager.NameNotFoundException e) {
-            // ignore fallback to packageName
+        if (hasConfig) {
+            try {
+                PackageManager pm = getPackageManager();
+                ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+                appLabel = pm.getApplicationLabel(ai);
+            } catch (PackageManager.NameNotFoundException e) {
+                // ignore fallback to packageName
+            }
         }
 
         Intent intent = new Intent(this, MemcActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.memc_notification_title))
-                .setContentText(getString(R.string.memc_notification_content, appLabel))
+        Notification.Builder builder = new Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_motion_settings)
                 .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .build();
+                .setContentIntent(pendingIntent);
+
+        if (hasConfig) {
+            builder.setContentTitle(getString(R.string.memc_notification_title))
+                    .setContentText(getString(R.string.memc_notification_content, appLabel));
+        } else {
+            builder.setContentTitle(getString(R.string.memc_notification_channel_name))
+                    .setContentText(getString(R.string.memc_summary));
+        }
+
+        Notification notification = builder.build();
 
         try {
             startForeground(NOTIFICATION_ID, notification,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE | ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
         } catch (Exception e) {
             mNotificationManager.notify(NOTIFICATION_ID, notification);
-        }
-    }
-
-    private void hideNotification() {
-        if (mNotificationManager != null) {
-            mNotificationManager.cancel(NOTIFICATION_ID);
-        }
-        try {
-            stopForeground(STOP_FOREGROUND_REMOVE);
-        } catch (Exception e) {
-            // ignore
         }
     }
 
