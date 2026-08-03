@@ -116,7 +116,12 @@
         <service
             android:name=".memc.MemcService"
             android:permission="MemcService"
-            android:exported="false" />
+            android:foregroundServiceType="specialUse|systemExempted"
+            android:exported="false">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MEMC display frame rate and color enhancement service" />
+        </service>
 
         <!-- Jitter Test Activity -->
         <activity

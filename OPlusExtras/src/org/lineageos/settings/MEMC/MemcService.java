@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.hardware.display.DisplayManager;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -55,7 +56,8 @@ public class MemcService extends Service {
         createNotificationChannel();
 
         mMemcUtils = new MemcUtils(this);
-        startForeground(NOTIFICATION_ID, createServiceNotification(""));
+        startForeground(NOTIFICATION_ID, createServiceNotification(""),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE | ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
 
         try {
             mActivityTaskManager = ActivityTaskManager.getService();
