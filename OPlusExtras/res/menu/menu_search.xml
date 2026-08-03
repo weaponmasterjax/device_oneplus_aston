@@ -6,6 +6,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/reset"
+        android:title="@string/memc_reset"
+        android:icon="@drawable/ic_reset"
+        android:showAsAction="always"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/search"
         android:title="@android:string/search_go"
         android:icon="@drawable/ic_search"
