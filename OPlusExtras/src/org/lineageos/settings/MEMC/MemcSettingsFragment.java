@@ -279,14 +279,12 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
         private ImageView icon;
         private ImageView configIndicator;
         private View rootView;
-        private Button configure;
 
         private ViewHolder(View view) {
             super(view);
             this.title = view.findViewById(R.id.app_name);
             this.icon = view.findViewById(R.id.app_icon);
             this.configIndicator = view.findViewById(R.id.app_config_indicator);
-            this.configure = view.findViewById(R.id.app_configure);
             this.rootView = view;
 
             view.setTag(this);
@@ -330,9 +328,7 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
                 return;
             }
             holder.title.setText(entry.label);
-            View.OnClickListener clickListener = v -> showConfigDialog(entry, holder.getBindingAdapterPosition());
-            holder.configure.setOnClickListener(clickListener);
-            holder.itemView.setOnClickListener(clickListener);
+            holder.itemView.setOnClickListener(v -> showConfigDialog(entry, holder.getBindingAdapterPosition()));
             mApplicationsState.ensureIcon(entry);
             holder.icon.setImageDrawable(entry.icon);
 
