@@ -38,6 +38,7 @@ import android.widget.SectionIndexer;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.preference.PreferenceFragmentCompat;
@@ -45,6 +46,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.settingslib.applications.ApplicationsState;
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.lineageos.settings.R;
 
@@ -69,6 +72,7 @@ public class RefreshSettingsFragment extends PreferenceFragmentCompat
 
     private RefreshUtils mRefreshUtils;
     private String mSearchFilter;
+    private OnBackPressedCallback mSearchOnBackPressedCallback;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -94,6 +98,55 @@ public class RefreshSettingsFragment extends PreferenceFragmentCompat
         inflater.inflate(R.menu.menu_search, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
         if (searchItem != null) {
+            searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    if (mSearchOnBackPressedCallback == null) {
+                        mSearchOnBackPressedCallback = new OnBackPressedCallback(true) {
+                            @Override
+                            public void handleOnBackPressed() {
+                                if (item != null && item.isActionViewExpanded()) {
+                                    item.collapseActionView();
+                                }
+                            }
+                        };
+                        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), mSearchOnBackPressedCallback);
+                    } else {
+                        mSearchOnBackPressedCallback.setEnabled(true);
+                    }
+
+                    if (getActivity() instanceof CollapsingToolbarBaseActivity) {
+                        CollapsingToolbarBaseActivity activity = (CollapsingToolbarBaseActivity) getActivity();
+                        AppBarLayout appBarLayout = activity.getAppBarLayout();
+                        if (appBarLayout == null) {
+                            appBarLayout = activity.findViewById(com.android.settingslib.collapsingtoolbar.R.id.app_bar);
+                        }
+                        if (appBarLayout != null) {
+                            appBarLayout.setExpanded(false, true);
+                        }
+                    }
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    if (mSearchOnBackPressedCallback != null) {
+                        mSearchOnBackPressedCallback.setEnabled(false);
+                    }
+
+                    if (getActivity() instanceof CollapsingToolbarBaseActivity) {
+                        CollapsingToolbarBaseActivity activity = (CollapsingToolbarBaseActivity) getActivity();
+                        AppBarLayout appBarLayout = activity.getAppBarLayout();
+                        if (appBarLayout == null) {
+                            appBarLayout = activity.findViewById(com.android.settingslib.collapsingtoolbar.R.id.app_bar);
+                        }
+                        if (appBarLayout != null) {
+                            appBarLayout.setExpanded(true, true);
+                        }
+                    }
+                    return true;
+                }
+            });
             View actionView = searchItem.getActionView();
             if (actionView instanceof android.widget.SearchView) {
                 android.widget.SearchView searchView = (android.widget.SearchView) actionView;
