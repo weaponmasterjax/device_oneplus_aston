@@ -8,8 +8,10 @@ import android.app.Service;
 import android.app.ActivityTaskManager;
 import android.app.ActivityTaskManager.RootTaskInfo;
 import android.app.IActivityTaskManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
@@ -39,10 +41,21 @@ public class MemcService extends Service {
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private Future<?> mCurrentConfigTask;
 
+    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPreviousApp = "";
+        }
+    };
+
     @Override
     public void onCreate() {
+        super.onCreate();
         mNotificationManager = getSystemService(NotificationManager.class);
         createNotificationChannel();
+
+        mMemcUtils = new MemcUtils(this);
+        startForeground(NOTIFICATION_ID, createServiceNotification(""));
 
         try {
             mActivityTaskManager = ActivityTaskManager.getService();
@@ -56,9 +69,8 @@ public class MemcService extends Service {
             mDisplayManager.registerDisplayListener(mDisplayListener, null);
         }
 
-        mMemcUtils = new MemcUtils(this);
+        registerReceiver();
         applyConfig("");
-        super.onCreate();
     }
 
     @Override
@@ -68,14 +80,19 @@ public class MemcService extends Service {
 
     @Override
     public void onDestroy() {
+        try {
+            unregisterReceiver(mIntentReceiver);
+        } catch (Exception e) {
+            // ignore
+        }
         if (mDisplayManager != null) {
             mDisplayManager.unregisterDisplayListener(mDisplayListener);
         }
         if (mCurrentConfigTask != null) {
-            mCurrentConfigTask.cancel(true);
+            mCurrentConfigTask.cancel(false);
         }
         mExecutor.shutdownNow();
-        hideNotification();
+        stopForeground(STOP_FOREGROUND_REMOVE);
         super.onDestroy();
     }
 
@@ -84,16 +101,23 @@ public class MemcService extends Service {
         return null;
     }
 
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        registerReceiver(mIntentReceiver, filter);
+    }
+
     private synchronized void applyConfig(final String packageName) {
         if (mCurrentConfigTask != null && !mCurrentConfigTask.isDone()) {
-            mCurrentConfigTask.cancel(true);
+            mCurrentConfigTask.cancel(false);
         }
 
+        updateNotification(packageName);
+
         if (mMemcUtils.hasPackageConfig(packageName)) {
-            showNotification(packageName);
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
         } else {
-            hideNotification();
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeDefaultConfig());
         }
     }
@@ -109,37 +133,41 @@ public class MemcService extends Service {
         }
     }
 
-    private void showNotification(String packageName) {
-        if (mNotificationManager == null) return;
-
+    private Notification createServiceNotification(String packageName) {
         CharSequence appLabel = packageName;
-        try {
-            PackageManager pm = getPackageManager();
-            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
-            appLabel = pm.getApplicationLabel(ai);
-        } catch (PackageManager.NameNotFoundException e) {
-            // ignore fallback to packageName
+        if (packageName != null && !packageName.isEmpty()) {
+            try {
+                PackageManager pm = getPackageManager();
+                ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+                appLabel = pm.getApplicationLabel(ai);
+            } catch (PackageManager.NameNotFoundException e) {
+                // ignore fallback to packageName
+            }
         }
 
         Intent intent = new Intent(this, MemcActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.memc_notification_title))
-                .setContentText(getString(R.string.memc_notification_content, appLabel))
+        Notification.Builder builder = new Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oplus_extras)
                 .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .build();
+                .setContentIntent(pendingIntent);
 
-        mNotificationManager.notify(NOTIFICATION_ID, notification);
+        if (packageName != null && !packageName.isEmpty() && mMemcUtils.hasPackageConfig(packageName)) {
+            builder.setContentTitle(getString(R.string.memc_notification_title))
+                    .setContentText(getString(R.string.memc_notification_content, appLabel));
+        } else {
+            builder.setContentTitle(getString(R.string.memc_notification_channel_name))
+                    .setContentText(getString(R.string.memc_summary));
+        }
+
+        return builder.build();
     }
 
-    private void hideNotification() {
-        if (mNotificationManager != null) {
-            mNotificationManager.cancel(NOTIFICATION_ID);
-        }
+    private void updateNotification(String packageName) {
+        if (mNotificationManager == null) return;
+        mNotificationManager.notify(NOTIFICATION_ID, createServiceNotification(packageName));
     }
 
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
@@ -174,7 +202,7 @@ public class MemcService extends Service {
                     return;
                 }
                 String foregroundApp = info.topActivity.getPackageName();
-                if (!foregroundApp.equals(mPreviousApp)) {
+                if (foregroundApp != null && !foregroundApp.equals(mPreviousApp)) {
                     applyConfig(foregroundApp);
                     mPreviousApp = foregroundApp;
                 }

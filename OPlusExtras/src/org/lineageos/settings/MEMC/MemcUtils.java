@@ -76,17 +76,13 @@ public final class MemcUtils {
     private void applyConfigLines(String[] lines) {
         if (lines == null) return;
         for (String line : lines) {
-            if (Thread.currentThread().isInterrupted()) {
-                break;
-            }
             String value = line == null ? "" : line.trim();
             if (value.isEmpty()) continue;
             setPropertyValue(value);
             try {
                 Thread.sleep(DELAY_MS);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+                // Ignore interrupt during delay to ensure full sequence completion
             }
         }
     }
