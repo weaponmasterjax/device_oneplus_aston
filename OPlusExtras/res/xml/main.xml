@@ -6,8 +6,8 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:settings="http://schemas.android.com/apk/res/org.lineageos.settings"
-    android.title="@string/oplus_extras_title">
+    xmlns:settings="http://schemas.android.com/apk/org.lineageos.settings"
+    android:title="@string/oplus_extras_title">
 
     <!-- Start of alert slider Category -->
     <PreferenceCategory

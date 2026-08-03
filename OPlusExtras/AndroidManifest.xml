@@ -38,11 +38,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".OPlusExtras" />
-        <activity
-            android:name=".slider.KeyHandler" />
-
         <!-- OPlusExtras -->
         <activity
             android:name=".OPlusExtrasActivity"
@@ -55,6 +50,9 @@
             <meta-data
                 android:name="com.android.settings.order"
                 android:value="-265" />
+            <meta-data
+                android:name="com.android.settings.title"
+                android:resource="@string/oplus_extras_title" />
             <meta-data
                 android:name="com.android.settings.icon"
                 android:resource="@drawable/ic_oplus_extras" />
