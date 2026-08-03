@@ -24,8 +24,8 @@ public final class MemcUtils {
     private static final float MEMC_REFRESH_RATE = 120f;
 
     private static final Object sLock = new Object();
-    private static float sSavedMinRefreshRate;
-    private static float sSavedPeakRefreshRate;
+    private static float sSavedMinRefreshRate = 0f;
+    private static float sSavedPeakRefreshRate = 120f;
     private static boolean sSavedRefreshRate = false;
 
     private final Context mContext;
@@ -110,8 +110,14 @@ public final class MemcUtils {
 
     private void saveOriginalRefreshRate() {
         try {
-            sSavedMinRefreshRate = Settings.System.getFloat(mContext.getContentResolver(), KEY_MIN_REFRESH_RATE, 60f);
-            sSavedPeakRefreshRate = Settings.System.getFloat(mContext.getContentResolver(), KEY_PEAK_REFRESH_RATE, 60f);
+            float min = Settings.System.getFloat(mContext.getContentResolver(), KEY_MIN_REFRESH_RATE, 0f);
+            float peak = Settings.System.getFloat(mContext.getContentResolver(), KEY_PEAK_REFRESH_RATE, 120f);
+            if (min != MEMC_REFRESH_RATE) {
+                sSavedMinRefreshRate = min;
+            }
+            if (peak != MEMC_REFRESH_RATE) {
+                sSavedPeakRefreshRate = peak;
+            }
             sSavedRefreshRate = true;
         } catch (Exception e) {
             sSavedRefreshRate = false;
@@ -120,7 +126,8 @@ public final class MemcUtils {
 
     private void restoreOriginalRefreshRate() {
         synchronized (sLock) {
-            if (!sSavedRefreshRate) {
+            float curMin = Settings.System.getFloat(mContext.getContentResolver(), KEY_MIN_REFRESH_RATE, 0f);
+            if (!sSavedRefreshRate && curMin != MEMC_REFRESH_RATE) {
                 return;
             }
             try {
