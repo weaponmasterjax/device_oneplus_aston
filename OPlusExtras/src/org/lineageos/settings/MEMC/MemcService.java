@@ -56,8 +56,6 @@ public class MemcService extends Service {
         createNotificationChannel();
 
         mMemcUtils = new MemcUtils(this);
-        startForeground(NOTIFICATION_ID, createServiceNotification(""),
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE | ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
 
         try {
             mActivityTaskManager = ActivityTaskManager.getService();
@@ -94,7 +92,7 @@ public class MemcService extends Service {
             mCurrentConfigTask.cancel(false);
         }
         mExecutor.shutdownNow();
-        stopForeground(STOP_FOREGROUND_REMOVE);
+        hideNotification();
         super.onDestroy();
     }
 
@@ -115,11 +113,11 @@ public class MemcService extends Service {
             mCurrentConfigTask.cancel(false);
         }
 
-        updateNotification(packageName);
-
-        if (mMemcUtils.hasPackageConfig(packageName)) {
+        if (packageName != null && mMemcUtils.hasPackageConfig(packageName)) {
+            showNotification(packageName);
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
         } else {
+            hideNotification();
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeDefaultConfig());
         }
     }
@@ -135,41 +133,47 @@ public class MemcService extends Service {
         }
     }
 
-    private Notification createServiceNotification(String packageName) {
+    private void showNotification(String packageName) {
+        if (mNotificationManager == null) return;
+
         CharSequence appLabel = packageName;
-        if (packageName != null && !packageName.isEmpty()) {
-            try {
-                PackageManager pm = getPackageManager();
-                ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
-                appLabel = pm.getApplicationLabel(ai);
-            } catch (PackageManager.NameNotFoundException e) {
-                // ignore fallback to packageName
-            }
+        try {
+            PackageManager pm = getPackageManager();
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            appLabel = pm.getApplicationLabel(ai);
+        } catch (PackageManager.NameNotFoundException e) {
+            // ignore fallback to packageName
         }
 
         Intent intent = new Intent(this, MemcActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        Notification.Builder builder = new Notification.Builder(this, CHANNEL_ID)
+        Notification notification = new Notification.Builder(this, CHANNEL_ID)
+                .setContentTitle(getString(R.string.memc_notification_title))
+                .setContentText(getString(R.string.memc_notification_content, appLabel))
                 .setSmallIcon(R.drawable.ic_oplus_extras)
                 .setOngoing(true)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .build();
 
-        if (packageName != null && !packageName.isEmpty() && mMemcUtils.hasPackageConfig(packageName)) {
-            builder.setContentTitle(getString(R.string.memc_notification_title))
-                    .setContentText(getString(R.string.memc_notification_content, appLabel));
-        } else {
-            builder.setContentTitle(getString(R.string.memc_notification_channel_name))
-                    .setContentText(getString(R.string.memc_summary));
+        try {
+            startForeground(NOTIFICATION_ID, notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE | ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
+        } catch (Exception e) {
+            mNotificationManager.notify(NOTIFICATION_ID, notification);
         }
-
-        return builder.build();
     }
 
-    private void updateNotification(String packageName) {
-        if (mNotificationManager == null) return;
-        mNotificationManager.notify(NOTIFICATION_ID, createServiceNotification(packageName));
+    private void hideNotification() {
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(NOTIFICATION_ID);
+        }
+        try {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
