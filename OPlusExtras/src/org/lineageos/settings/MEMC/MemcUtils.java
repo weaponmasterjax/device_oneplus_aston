@@ -50,6 +50,17 @@ public final class MemcUtils {
         mSharedPrefs.edit().remove(MEMC_CONTROL + ":" + packageName).apply();
     }
 
+    protected void resetAllConfigs() {
+        SharedPreferences.Editor editor = mSharedPrefs.edit();
+        for (String key : mSharedPrefs.getAll().keySet()) {
+            if (key != null && key.startsWith(MEMC_CONTROL + ":")) {
+                editor.remove(key);
+            }
+        }
+        editor.apply();
+        executeDefaultConfig();
+    }
+
     protected String getConfigForPackage(String packageName) {
         return mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
     }

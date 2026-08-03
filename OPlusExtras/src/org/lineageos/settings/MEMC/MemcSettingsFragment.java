@@ -167,6 +167,32 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.reset) {
+            showResetAllConfirmDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showResetAllConfirmDialog() {
+        Context context = getActivity();
+        if (context == null) return;
+
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.memc_reset_confirm_title)
+                .setMessage(R.string.memc_reset_confirm_message)
+                .setPositiveButton(R.string.memc_reset, (d, which) -> {
+                    mMemcUtils.resetAllConfigs();
+                    if (mAllPackagesAdapter != null) {
+                        mAllPackagesAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.memc_layout, container, false);
