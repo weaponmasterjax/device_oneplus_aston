@@ -152,7 +152,7 @@ public class MemcService extends Service {
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.memc_notification_title))
                 .setContentText(getString(R.string.memc_notification_content, appLabel))
-                .setSmallIcon(R.drawable.ic_oplus_extras)
+                .setSmallIcon(R.drawable.ic_motion_settings)
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
                 .build();
