@@ -31,7 +31,7 @@ public class MemcService extends Service {
     private static final String CHANNEL_ID = "memc_service_channel";
     private static final int NOTIFICATION_ID = 1001;
 
-    private String mPreviousApp = "";
+    private String mPreviousApp = null;
     private MemcUtils mMemcUtils;
     private IActivityTaskManager mActivityTaskManager;
     private NotificationManager mNotificationManager;
@@ -43,7 +43,7 @@ public class MemcService extends Service {
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mPreviousApp = "";
+            mPreviousApp = null;
             checkForegroundApp();
         }
     };
@@ -65,6 +65,7 @@ public class MemcService extends Service {
 
         registerReceiver();
         applyConfig("");
+        mPreviousApp = "";
     }
 
     @Override
@@ -101,11 +102,18 @@ public class MemcService extends Service {
     }
 
     private synchronized void applyConfig(final String packageName) {
+        boolean prevHasConfig = mPreviousApp != null && mMemcUtils.hasPackageConfig(mPreviousApp);
+        boolean currHasConfig = packageName != null && mMemcUtils.hasPackageConfig(packageName);
+
+        if (mPreviousApp != null && !prevHasConfig && !currHasConfig) {
+            return;
+        }
+
         if (mCurrentConfigTask != null && !mCurrentConfigTask.isDone()) {
             mCurrentConfigTask.cancel(false);
         }
 
-        if (packageName != null && mMemcUtils.hasPackageConfig(packageName)) {
+        if (currHasConfig) {
             showNotification(packageName);
             mCurrentConfigTask = mExecutor.submit(() -> mMemcUtils.executeConfig(packageName));
         } else {
