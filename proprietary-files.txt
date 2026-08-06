@@ -1267,9 +1267,7 @@ odm/bin/irisConfig
 odm/etc/init/vendor.pixelworks.hardware.feature.irisfeature-service-lazy.rc
 odm/etc/vintf/manifest/vendor.pixelworks.hardware.display@1.2.xml
 odm/etc/vintf/manifest/vendor.pixelworks.hardware.feature.irisfeature-service.xml
-# Ace 3 = Iris 7P. Keep i7p; i7 listed for extract/reference but NOT in PRODUCT_PACKAGES
-# (Phase 1: force i7p — see ~/workdir/memc.md §4 Phase 1 / §8).
-# odm/lib64/hw/vendor.pixelworks.hardware.display@1.0-impl-1.2-i7.so
+odm/lib64/hw/vendor.pixelworks.hardware.display@1.0-impl-1.2-i7.so
 odm/lib64/hw/vendor.pixelworks.hardware.display@1.0-impl-1.2-i7p.so
 odm/lib64/libpwirisIoctlWrapper.so
 odm/lib64/libpwirisPCS.so
@@ -1277,7 +1275,7 @@ odm/lib64/libpwiriscalibrate.so
 odm/lib64/libpwirisfeature.so
 odm/lib64/libpwirishalwrapper.so
 odm/lib64/libpwirispq.so
-# odm/lib64/libpwirisservicei7.so
+odm/lib64/libpwirisservicei7.so
 odm/lib64/libpwirisservicei7p.so
 odm/lib64/libpwirissoft.so
 odm/lib64/libpwsoftirisPCS.so
@@ -1312,13 +1310,7 @@ odm/etc/irissoft_AA551_P_3_A0004_dsc_cmd_mode_panel.fw
 odm/etc/irissoft_AA551_P_3_A0004_dsc_cmd_mode_panel.xml
 
 # Display (Pixelworks firmware)
-# Chip FW required for Iris 7P lightup (kernel: iris7p.fw + iris7p_ccf{1,2,3}.fw)
-odm/firmware/iris7p.fw
-odm/firmware/iris7p_ccf1.fw
-odm/firmware/iris7p_ccf2.fw
-odm/firmware/iris7p_ccf3.fw
 odm/firmware/pxlw_i7p_panel_AA551_P_3_A0004_dsc_cmd.fw
-odm/firmware/pxlw_i7p_vtdr6130_fhd_plus_vid.fw
 
 # Display calibration data
 vendor/etc/display/qdcm_calib_data_AA551_P_3_A0004_dsc_cmd_mode_panel.json
