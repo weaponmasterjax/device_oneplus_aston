@@ -116,3 +116,10 @@ $(call inherit-product-if-exists, vendor/oplus/camera/camera-vendor.mk)
 # DT_NEEDED — see device/oneplus/astonc/apsfixup + extract-files.py .add_needed).
 PRODUCT_PACKAGES += \
     libapsfixup
+
+# Add the updater service to the build.
+PRODUCT_PACKAGES += \
+    Updater
+
+PRODUCT_COPY_FILES += \
+    vendor/lumine/prebuilt/common/etc/init/init.luminedroid-updater.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.luminedroid-updater.rc
