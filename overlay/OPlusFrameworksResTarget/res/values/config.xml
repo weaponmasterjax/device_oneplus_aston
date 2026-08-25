@@ -26,7 +26,7 @@
          -2 is invalid so setting will resort to int value specified above.
          Set this to 0.0 to allow screen to go to minimal brightness.
          The user is forbidden from setting the brightness below this level. -->
-    <item type="dimen" name="config_screenBrightnessSettingMinimumFloat">0.02</item>
+    <item type="dimen" name="config_screenBrightnessSettingMinimumFloat">0.0</item>
 
     <!-- Maximum screen brightness allowed by the power manager.
          -2 is invalid so setting will resort to int value specified above.
@@ -135,8 +135,56 @@
         <item>20000</item>
         <item>30000</item>
         <item>40000</item>
+        <item>42500</item>
+        <item>45000</item>
+        <item>47500</item>
+        <item>50000</item>
+        <item>52500</item>
+        <item>55000</item>
+        <item>57500</item>
+        <item>60000</item>
+        <item>62500</item>
         <item>65000</item>
+        <item>67500</item>
+        <item>70000</item>
+        <item>72500</item>
+        <item>75000</item>
+        <item>77500</item>
+        <item>80000</item>
+        <item>82500</item>
+        <item>85000</item>
+        <item>87500</item>
         <item>90000</item>
+        <item>92500</item>
+        <item>95000</item>
+        <item>97500</item>
+        <item>100000</item>
+        <item>102500</item>
+        <item>105000</item>
+        <item>107500</item>
+        <item>110000</item>
+        <item>112500</item>
+        <item>115000</item>
+        <item>117500</item>
+        <item>120000</item>
+        <item>122500</item>
+        <item>125000</item>
+        <item>127500</item>
+        <item>130000</item>
+        <item>132500</item>
+        <item>135000</item>
+        <item>137500</item>
+        <item>140000</item>
+        <item>142000</item>
+        <item>144000</item>
+        <item>146000</item>
+        <item>148000</item>
+        <item>150000</item>
+        <item>152000</item>
+        <item>154000</item>
+        <item>156000</item>
+        <item>158000</item>
+        <item>160000</item>
     </integer-array>
 
     <!-- Array of desired screen brightness in nits corresponding to the lux values
@@ -151,51 +199,94 @@
          This array should have size one greater than the size of the config_autoBrightnessLevels
          array. The brightness values must be non-negative and non-decreasing. This must be
          overridden in platform specific overlays -->
-     <!-- Nit targets from stock lux_table id="33" (Aston) +
-          hbm_lux_table id="33" for the HBM range (> 15000 lux).
-          HBM nits beyond 15000 lux follow the hbm_lux_table id="33"
-          enter thresholds: 20000→650, 30000→720, 40000→800.
-          Values above 40000 lux linearly extrapolated to panel max. -->
-     <array name="config_autoBrightnessDisplayValuesNits">
-     <item>2.5</item>    <!-- 0 - 2 -->
-     <item>7.5</item>    <!-- 2 - 4 -->
-     <item>13.0</item>   <!-- 4 - 6 -->
-     <item>18.0</item>   <!-- 6 - 8 -->
-     <item>25.0</item>   <!-- 8 - 10 -->
-     <item>30.0</item>   <!-- 10 - 15 -->
-     <item>38.0</item>   <!-- 15 - 20 -->
-     <item>45.0</item>   <!-- 20 - 25 -->
-     <item>50.0</item>   <!-- 25 - 30 -->
-     <item>55.0</item>   <!-- 30 - 40 -->
-     <item>60.0</item>   <!-- 40 - 60 -->
-     <item>70.0</item>   <!-- 60 - 95 -->
-     <item>79.0</item>   <!-- 95 - 100 -->
-     <item>82.0</item>   <!-- 100 - 200 -->
-     <item>90.0</item>   <!-- 200 - 300 -->
-     <item>98.0</item>   <!-- 300 - 400 -->
-     <item>106.0</item>  <!-- 400 - 500 -->
-     <item>113.0</item>  <!-- 500 - 1000 -->
-     <item>152.0</item>  <!-- 1000 - 1100 -->
-     <item>160.0</item>  <!-- 1100 - 1200 -->
-     <item>168.0</item>  <!-- 1200 - 1300 -->
-     <item>177.0</item>  <!-- 1300 - 1400 -->
-     <item>185.0</item>  <!-- 1400 - 1500 -->
-     <item>194.0</item>  <!-- 1500 - 1600 -->
-     <item>203.0</item>  <!-- 1600 - 1700 -->
-     <item>212.0</item>  <!-- 1700 - 1800 -->
-     <item>222.0</item>  <!-- 1800 - 1900 -->
-     <item>232.0</item>  <!-- 1900 - 2000 -->
-     <item>243.0</item>  <!-- 2000 - 4000 -->
-     <item>391.0</item>  <!-- 4000 - 7000 -->
-     <item>500.0</item>  <!-- 7000 - 10000 -->
-     <item>545.0</item>  <!-- 10000 - 15000 -->
-     <item>600.0</item>  <!-- 15000 - 20000 (hbm_lux_table id=33: enter 20000) -->
-     <item>650.0</item>  <!-- 20000 - 30000 (hbm_lux_table id=33: enter 30000) -->
-     <item>720.0</item>  <!-- 30000 - 40000 (hbm_lux_table id=33: enter 40000) -->
-     <item>800.0</item>  <!-- 40000 - 65000 -->
-     <item>900.0</item>  <!-- 65000 - 90000 -->
-     <item>1000.0</item> <!-- 90000+ -->
-     </array>
+    <array name="config_autoBrightnessDisplayValuesNits">
+        <item>2.5</item>
+        <item>7.5</item>
+        <item>13</item>
+        <item>18</item>
+        <item>25</item>
+        <item>30</item>
+        <item>38</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>70</item>
+        <item>79</item>
+        <item>82</item>
+        <item>90</item>
+        <item>98</item>
+        <item>106</item>
+        <item>113</item>
+        <item>152</item>
+        <item>160</item>
+        <item>168</item>
+        <item>177</item>
+        <item>185</item>
+        <item>194</item>
+        <item>203</item>
+        <item>212</item>
+        <item>222</item>
+        <item>232</item>
+        <item>243</item>
+        <item>391</item>
+        <item>500</item>
+        <item>545</item>
+        <item>600</item>
+        <item>650</item>
+        <item>720</item>
+        <item>800</item>
+        <item>810</item>
+        <item>820</item>
+        <item>830</item>
+        <item>840</item>
+        <item>850</item>
+        <item>860</item>
+        <item>870</item>
+        <item>880</item>
+        <item>890</item>
+        <item>900</item>
+        <item>910</item>
+        <item>920</item>
+        <item>930</item>
+        <item>940</item>
+        <item>950</item>
+        <item>960</item>
+        <item>970</item>
+        <item>980</item>
+        <item>990</item>
+        <item>1000</item>
+        <item>1010</item>
+        <item>1020</item>
+        <item>1030</item>
+        <item>1040</item>
+        <item>1050</item>
+        <item>1060</item>
+        <item>1070</item>
+        <item>1080</item>
+        <item>1090</item>
+        <item>1100</item>
+        <item>1110</item>
+        <item>1120</item>
+        <item>1130</item>
+        <item>1140</item>
+        <item>1150</item>
+        <item>1160</item>
+        <item>1170</item>
+        <item>1180</item>
+        <item>1190</item>
+        <item>1200</item>
+        <item>1240</item>
+        <item>1280</item>
+        <item>1320</item>
+        <item>1360</item>
+        <item>1400</item>
+        <item>1440</item>
+        <item>1480</item>
+        <item>1520</item>
+        <item>1560</item>
+        <item>1594.057</item>
+    </array>
 
     <!-- An array describing the screen's backlight values corresponding to the brightness
          values in the config_screenBrightnessNits array.
