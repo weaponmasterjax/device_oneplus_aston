@@ -442,18 +442,17 @@ public class MemcSettingsFragment extends PreferenceFragmentCompat
                     .setPositiveButton(android.R.string.ok, (d, which) -> {
                         String value = input != null ? input.getText().toString() : "";
                         mMemcUtils.writePackageConfig(pkg, value);
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setOnDismissListener(d -> {
                         if (position != RecyclerView.NO_POSITION) {
                             notifyItemChanged(position);
                         }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null);
+                    });
 
             if (!TextUtils.isEmpty(existing)) {
                 builder.setNeutralButton(R.string.memc_reset, (d, which) -> {
                     mMemcUtils.removePackageConfig(pkg);
-                    if (position != RecyclerView.NO_POSITION) {
-                        notifyItemChanged(position);
-                    }
                 });
             }
 
