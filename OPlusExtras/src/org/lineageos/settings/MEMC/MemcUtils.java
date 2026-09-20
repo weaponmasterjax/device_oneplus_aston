@@ -43,7 +43,11 @@ public final class MemcUtils {
     }
 
     protected void writePackageConfig(String packageName, String config) {
-        mSharedPrefs.edit().putString(MEMC_CONTROL + ":" + packageName, config).apply();
+        if (config == null || config.trim().isEmpty()) {
+            removePackageConfig(packageName);
+        } else {
+            mSharedPrefs.edit().putString(MEMC_CONTROL + ":" + packageName, config.trim()).apply();
+        }
     }
 
     protected void removePackageConfig(String packageName) {
@@ -62,11 +66,16 @@ public final class MemcUtils {
     }
 
     protected String getConfigForPackage(String packageName) {
-        return mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
+        String cfg = mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
+        if (cfg != null && cfg.trim().isEmpty()) {
+            removePackageConfig(packageName);
+            return null;
+        }
+        return cfg;
     }
 
     protected boolean hasPackageConfig(String packageName) {
-        String cfg = mSharedPrefs.getString(MEMC_CONTROL + ":" + packageName, null);
+        String cfg = getConfigForPackage(packageName);
         return cfg != null && !cfg.trim().isEmpty();
     }
 
