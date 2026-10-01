@@ -1,7 +1,7 @@
 soong_namespace {
     imports: [
         "hardware/oplus",
-        "vendor/oneplus/astonc",
+        "vendor/oneplus/aston",
     ],
 }
 

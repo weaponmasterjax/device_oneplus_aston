@@ -68,7 +68,7 @@ PRODUCT_PACKAGES += \
     OPlusSystemUIResTarget
 
 # Power
-$(call soong_config_set,power_libperfmgr,mode_extension_lib,//$(LOCAL_PATH):libperfmgr-ext-astonc)
+$(call soong_config_set,power_libperfmgr,mode_extension_lib,//$(LOCAL_PATH):libperfmgr-ext-aston)
 
 # Regional properties
 PRODUCT_COPY_FILES += \
@@ -113,7 +113,7 @@ $(call inherit-product, vendor/oneplus/aston/aston-vendor.mk)
 $(call inherit-product-if-exists, vendor/oplus/camera/camera-vendor.mk)
 
 # APS P010 over-walk fix (GOT-interposer loaded into com.oplus.camera via libAlgoProcess.so
-# DT_NEEDED — see device/oneplus/astonc/apsfixup + extract-files.py .add_needed).
+# DT_NEEDED — see device/oneplus/aston/apsfixup + extract-files.py .add_needed).
 PRODUCT_PACKAGES += \
     libapsfixup
 

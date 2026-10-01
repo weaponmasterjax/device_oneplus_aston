@@ -1,5 +1,5 @@
 cc_library_static {
-    name: "libperfmgr-ext-astonc",
+    name: "libperfmgr-ext-aston",
     vendor: true,
     srcs: [
         "power-mode.cpp",
