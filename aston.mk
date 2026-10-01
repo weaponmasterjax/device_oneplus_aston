@@ -11,10 +11,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from aston device
 $(call inherit-product, device/oneplus/aston/device.mk)
 
-# Inherit some common Lineage stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+# Inherit some common ASCP stuff.
+$(call inherit-product, vendor/custom/config/common_full_phone.mk)
 
-PRODUCT_NAME := lineage_aston
+PRODUCT_NAME := aston
 PRODUCT_DEVICE := aston
 PRODUCT_MANUFACTURER := OnePlus
 PRODUCT_BRAND := OnePlus
@@ -30,7 +30,8 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     SystemDevice=OP5D35L1 \
     SystemName=CPH2585
 
-MISTOS_MAINTAINER := WeaponmasterJAX
+ASCP_MAINTAINER := Weaponmasterjax
+WITH_REVANCED := true
 WITH_GMS := true
 TARGET_ENABLE_BLUR := true
 TARGET_SUPPORTS_QUICK_TAP := true
