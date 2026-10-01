@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
-// libapsfixup.so — OnePlus 12R / Ace 3 (aston / astonc, sm8550) APS turbo capture fix.
+// libapsfixup.so — OnePlus 12R / Ace 3 (aston / aston, sm8550) APS turbo capture fix.
 //
 // FIRST-PARTY, source-built cc_library_shared (NOT a blob patch). It leaves the prebuilt
 // /odm/lib64 OPlus algo blobs byte-identical and corrects the values they CONSUME at runtime,
@@ -46,7 +46,7 @@
 //   (4) std::mutex lock/unlock/dtor: guard NULL+offset calls (defensive; ends the worker cleanly).
 //
 // ──────────────────────────────────────────────────────────────────────────────────────────
-// sm8550 (astonc) offsets — verified against the DEPLOYED blobs (readelf -rW), DO NOT reuse
+// sm8550 (aston) offsets — verified against the DEPLOYED blobs (readelf -rW), DO NOT reuse
 // the dodge/sm8850 values:
 //   libAlgoProcess.so    BuildId 1d7e89c4c5ef30e12443e1e96059321c
 //     p010LSB2MSB        GOT @ +0x703748  (func body +0x41efec)  _ZN18APSFormatConverter11p010LSB2MSBEPtS0_jjjj
@@ -171,7 +171,7 @@ static bool got_redirect(uint64_t slot, void* newval, void** old) {
 // after the Y plane. For P010 4:2:0 the Y plane is exactly width*height*2 bytes (2 bytes/sample);
 // this is the natural contiguous offset and, unlike 2/3-of-mapping, is immune to dmabuf padding.
 //
-// Struct layout (astonc, runtime-verified): width @ +0x14, height @ +0x18,
+// Struct layout (aston, runtime-verified): width @ +0x14, height @ +0x18,
 // luma ptr @ +0x20, chroma ptr @ +0x28.
 static void repair_struct(void* p) {
     if (!p) return;

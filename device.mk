@@ -120,6 +120,6 @@ $(call inherit-product, device/oneplus/sm8550-common/common.mk)
 $(call inherit-product, vendor/oneplus/aston/aston-vendor.mk)
 
 # APS P010 over-walk fix (GOT-interposer loaded into com.oplus.camera via libAlgoProcess.so
-# DT_NEEDED — see device/oneplus/astonc/apsfixup + extract-files.py .add_needed).
+# DT_NEEDED — see device/oneplus/aston/apsfixup + extract-files.py .add_needed).
 PRODUCT_PACKAGES += \
     libapsfixup
