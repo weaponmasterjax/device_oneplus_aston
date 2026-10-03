@@ -8,9 +8,6 @@
     <!-- Maximum number of notification icons shown in the status bar (excluding overflow dot) -->
     <integer name="max_notif_static_icons">6</integer>
 
-    <!-- Charging info current divider, if needed -->
-    <integer name="config_currentInfoDivider" translatable="false">1</integer>
-
     <!-- Color of the UDFPS Pressed view -->
     <color name="config_udfpsColor">#ffffe6</color>
 </resources>
